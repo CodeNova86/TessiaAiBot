@@ -1,7 +1,7 @@
 import json
 import os
 
-from .config import FATHER_AUTO_REPLY_ENABLED, FATHER_PERSONA_FILE, FATHER_WHITELIST_FILE
+from .config import FATHER_AUTO_REPLY_ENABLED, FATHER_GATEWAY_STATE_FILE, FATHER_PERSONA_FILE, FATHER_WHITELIST_FILE
 
 
 def default_whitelist_state():
@@ -86,8 +86,10 @@ def set_whitelist_enabled(enabled: bool):
 def get_father_runtime_status() -> dict:
     whitelist = load_father_whitelist()
     persona = load_father_persona()
+    gateway_state = load_gateway_runtime_state()
     return {
         "gateway_env_enabled": FATHER_AUTO_REPLY_ENABLED,
+        "gateway_runtime_enabled": gateway_state.get("enabled", True),
         "whitelist_enabled": whitelist.get("enabled", True),
         "allowed_user_ids_count": len(whitelist.get("allowed_user_ids", [])),
         "allowed_usernames_count": len(whitelist.get("allowed_usernames", [])),
@@ -128,3 +130,20 @@ def get_persona_note(target: str) -> str:
         return ""
     data = load_father_persona()
     return str(data.get(target, "")).strip()
+
+
+def load_gateway_runtime_state():
+    if not os.path.exists(FATHER_GATEWAY_STATE_FILE):
+        return {"enabled": True}
+    with open(FATHER_GATEWAY_STATE_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return {"enabled": bool(data.get("enabled", True))}
+
+
+def set_gateway_runtime_enabled(enabled: bool):
+    with open(FATHER_GATEWAY_STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump({"enabled": bool(enabled)}, f, ensure_ascii=False, indent=2)
+
+
+def is_gateway_runtime_enabled() -> bool:
+    return bool(load_gateway_runtime_state().get("enabled", True))

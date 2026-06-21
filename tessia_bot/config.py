@@ -20,6 +20,7 @@ DATA_FILE = "tessia_data.json"
 AUTOMATION_RULES_FILE = "tessia_automation_rules.json"
 FATHER_WHITELIST_FILE = "father_whitelist.json"
 FATHER_PERSONA_FILE = "father_persona.json"
+FATHER_GATEWAY_STATE_FILE = "father_gateway_state.json"
 LOG_FILE = "tessia_bot.log"
 FATHER_ID = "1548469285"
 MAX_CONCURRENT = 5

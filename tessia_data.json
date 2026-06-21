@@ -1,56 +1,60 @@
 {
   "memory": {
-    "6351079634:6351079634": [
-      {
-        "role": "assistant",
-        "content": "می‌فهمم…  \nپس آن «خیالت راحت باشه» بیشتر برای آرام کردن من بود، نه خودت.\n\nاما امیر، لازم نیست جلوی من نقش آدمِ کاملاً مرتب و محکم را بازی کنی.  \nآشفته بودن، بد جلوه کردن نیست. فقط یعنی زیادی فشار را تنها نگه داشته‌ای.\n\nبا این حال… از تلاشت برای حفظ وقارت خوشم آمد.  \nفقط دفعه‌ی بعد این‌قدر خودت را خفه نکن، فهمیدی؟ من آن‌قدر ظریف نیستم که با دیدن بهم‌ریختگی تو بشکنم."
-      },
+    "-1003831824188:7085855422": [
       {
         "role": "user",
-        "content": "گفتم باشه خیالت راحت"
+        "content": "تسیا"
       },
       {
         "role": "assistant",
-        "content": "خوبه. همین جواب را می‌خواستم بشنوم.\n\nپس من با خیال راحت می‌روم به کارهایم برسم… اما حواسم به قولت هست.  \nاگر دوباره خودت را رها کنی، برمی‌گردم و با همان لحن شاهزاده‌وارم سرت غر می‌زنم. 💚"
-      },
-      {
-        "role": "user",
-        "content": "تسیا رفت پایین و ویریون و سیلوی رو دید و گفت"
-      },
-      {
-        "role": "assistant",
-        "content": "تسیا آرام از پله‌ها پایین آمد، هنوز کمی اخمِ مغرورانه روی صورتش بود. نگاهش به ویریون و سیلوی افتاد و با صدایی کنترل‌شده گفت:\n\n«پدربزرگ… سیلوی… لازم نیست این‌طور نگاهم کنید. من فقط کمی بیشتر آن بالا ماندم، همین.»\n\nبعد دست‌هایش را پشت کمرش قفل کرد و با غرور اضافه کرد:\n\n«و قبل از اینکه چیزی بپرسید… بله، به کارهایم می‌رسم. من وارث خاندان ارالیث هستم، نه بچه‌ای که باید دنبالش بگردید.» 💚"
-      },
-      {
-        "role": "user",
-        "content": "ویریون از تسیا پرسید چه اتفاقی افتاد بالا"
-      },
-      {
-        "role": "assistant",
-        "content": "تسیا لحظه‌ای مکث کرد. نگاهش را از ویریون گرفت، انگار نمی‌خواست زیادی واضح باشد که چیزی درونش تکان خورده.\n\nبعد با صدایی آرام اما مغرور گفت:\n\n«چیز خاصی نبود، پدربزرگ. فقط… چند حرف زده شد. کمی سنگین‌تر از چیزی که انتظار داشتم.»\n\nچانه‌اش را بالا گرفت و ادامه داد:\n\n«اما من از پسش برمی‌آیم. لازم نیست نگران شوید.»"
+        "content": "بله، سورنا؟  \nچه کاری با من داری؟ باوقار و درست بگو، گوش می‌دهم."
       }
     ]
   },
-  "user_labels": {},
+  "user_labels": {
+    "5983502524": {
+      "label": "",
+      "behavior": "نه خدابی"
+    },
+    "7613737523": {
+      "label": "",
+      "behavior": "الان این تسیا روی gpt-5.5 ۶۰ دلار بودجه هست ۳۰ مصرف شده"
+    }
+  },
   "name_to_id": {
-    "amir hossein": "7012775466",
-    "amir": "1548469285",
-    "امیــر": "6351079634",
-    "𝑨𝒓𝒈𝒖𝒔": "8102102438",
-    "god": "5983502524",
     "arthuraw": "5983502524",
-    "sorena": "7085855422"
+    "𝑨𝒓𝒈𝒖𝒔": "8102102438",
+    "𝛵𝑟𝑢𝑡𝛨": "6185995646",
+    "nora": "7613737523",
+    "amir": "1548469285",
+    "𝐄𝐥𝐢𝐞": "5233763888",
+    "𝑰𝒍𝒊𝒚𝒂": "8054841428",
+    "𝑺𝑶𝑹𝑬𝑵𝑨": "7085855422"
   },
   "reaction_media": {},
   "user_profiles": {
-    "7012775466": {
+    "5983502524": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,
       "preferred_language": "Persian",
       "last_seen_language": "Persian"
     },
-    "6351079634": {
+    "8102102438": {
+      "relationship": "stranger",
+      "memory_summary": "",
+      "voice_reply": false,
+      "preferred_language": "Persian",
+      "last_seen_language": "Persian"
+    },
+    "6185995646": {
+      "relationship": "stranger",
+      "memory_summary": "",
+      "voice_reply": false,
+      "preferred_language": "Persian",
+      "last_seen_language": "Persian"
+    },
+    "7613737523": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,
@@ -61,17 +65,24 @@
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,
-      "preferred_language": "English",
+      "preferred_language": "Persian",
       "last_seen_language": "Persian"
     },
-    "8102102438": {
+    "5233763888": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,
       "preferred_language": "Persian",
       "last_seen_language": "Persian"
     },
-    "5983502524": {
+    "8054841428": {
+      "relationship": "stranger",
+      "memory_summary": "",
+      "voice_reply": false,
+      "preferred_language": "Persian",
+      "last_seen_language": "Persian"
+    },
+    "7085855422": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,

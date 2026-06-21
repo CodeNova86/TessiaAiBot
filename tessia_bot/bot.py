@@ -57,6 +57,7 @@ from tessia_bot.father_control import (
     load_father_whitelist,
     remove_whitelist_entry,
     set_persona_note,
+    set_gateway_runtime_enabled,
     set_whitelist_enabled,
 )
 from tessia_bot.state import (
@@ -169,6 +170,10 @@ def build_panel_keyboard():
                 InlineKeyboardButton(text="وایت‌لیست", callback_data="panel:whitelist"),
             ],
             [
+                InlineKeyboardButton(text="روشن‌کردن جواب‌دهی", callback_data="panel:gw_on"),
+                InlineKeyboardButton(text="خاموش‌کردن جواب‌دهی", callback_data="panel:gw_off"),
+            ],
+            [
                 InlineKeyboardButton(text="روشن‌کردن لیست", callback_data="panel:wl_on"),
                 InlineKeyboardButton(text="خاموش‌کردن لیست", callback_data="panel:wl_off"),
             ],
@@ -189,6 +194,7 @@ def render_father_panel_text():
     return (
         "پنل کنترل اکانت پدر\n\n"
         f"gateway env: {'on' if status['gateway_env_enabled'] else 'off'}\n"
+        f"gateway runtime: {'on' if status['gateway_runtime_enabled'] else 'off'}\n"
         f"whitelist: {'on' if status['whitelist_enabled'] else 'off'}\n"
         f"allowed ids: {status['allowed_user_ids_count']}\n"
         f"allowed usernames: {status['allowed_usernames_count']}\n\n"
@@ -230,6 +236,12 @@ async def handle_panel_callback(callback: CallbackQuery):
     elif action == "wl_off":
         set_whitelist_enabled(False)
         text = "وایت‌لیست خاموش شد.\n\n" + render_father_panel_text()
+    elif action == "gw_on":
+        set_gateway_runtime_enabled(True)
+        text = "جواب‌دهی پیوی روشن شد.\n\n" + render_father_panel_text()
+    elif action == "gw_off":
+        set_gateway_runtime_enabled(False)
+        text = "جواب‌دهی پیوی خاموش شد.\n\n" + render_father_panel_text()
     elif action == "help_add":
         text = (
             "برای افزودن به وایت‌لیست:\n\n"

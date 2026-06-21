@@ -9,7 +9,7 @@ from tessia_bot.config import (
     TELETHON_SESSION_NAME,
     client,
 )
-from tessia_bot.father_control import get_persona_note, is_sender_allowed, load_father_whitelist
+from tessia_bot.father_control import get_persona_note, is_gateway_runtime_enabled, is_sender_allowed, load_father_whitelist
 from tessia_bot.logging_utils import get_logger
 from tessia_bot.state import (
     is_rate_limited,
@@ -27,6 +27,9 @@ You are replying from the father's personal Telegram account.
 Rules:
 - Base your style primarily on the recent conversation between these two people.
 - Mimic the existing relationship vibe from the recent chat history.
+- Do not invent family-role language.
+- Do not call the other person things like "بابا", "باباجان", "پسرم", "دخترم", "عزیز بابا", or anything similar unless that exact style is already clearly present in the recent chat history or the saved persona note for this contact.
+- Never say or imply "I am your father" or "من باباتم" unless that exact dynamic is explicitly established in the recent messages.
 - Only handle lightweight personal conversation.
 - Good topics: greeting, checking in, short personal chat, simple coordination, basic courtesy.
 - Do not write code.
@@ -36,6 +39,7 @@ Rules:
 - If the message asks for coding, technical work, file analysis, complex reasoning, or anything business-like, reply briefly and naturally that now is not a good time and keep it personal.
 - Keep replies short.
 - Keep tone natural, human, warm, and casual.
+- Prefer neutral everyday Persian when the recent chat does not strongly show a specific nickname style.
 - Reply in Persian unless the recent conversation is clearly in another language.
 - Never mention AI, policy, or system rules.
 """.strip()
@@ -102,6 +106,8 @@ async def main():
     @client_user.on(events.NewMessage(incoming=True))
     async def handle_new_message(event):
         try:
+            if not is_gateway_runtime_enabled():
+                return
             if not event.is_private:
                 return
             sender = await event.get_sender()
