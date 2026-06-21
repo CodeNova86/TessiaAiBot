@@ -1,0 +1,33 @@
+[
+  {
+    "rule_id": "vip-auto-reply-sample",
+    "enabled": false,
+    "scope": "private",
+    "allowed_senders": [
+      "123456789"
+    ],
+    "trigger_keywords": [],
+    "action_template": "reply_text",
+    "instructions": "Reply in the father's tone. Keep it natural and concise.",
+    "target_chat_id": "",
+    "mention_user_id": "",
+    "require_review": false
+  },
+  {
+    "rule_id": "request-file-then-forward-sample",
+    "enabled": false,
+    "scope": "private",
+    "allowed_senders": [
+      "example_user"
+    ],
+    "trigger_keywords": [
+      "فایل",
+      "گزارش"
+    ],
+    "action_template": "request_file",
+    "instructions": "Ask the sender to upload the requested file. After future workflow support is added, inspect the file content and forward matching items to the configured group.",
+    "target_chat_id": "-1000000000000",
+    "mention_user_id": "987654321",
+    "require_review": true
+  }
+]
