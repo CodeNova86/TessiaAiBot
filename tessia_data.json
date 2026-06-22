@@ -1,198 +1,41 @@
 {
   "memory": {
-    "-1003831824188:7085855422": [
+    "-1003831824188:1548469285": [
       {
         "role": "user",
         "content": "تسیا"
       },
       {
         "role": "assistant",
-        "content": "بله، سورنا؟  \nچه کاری با من داری؟ باوقار و درست بگو، گوش می‌دهم."
-      }
-    ],
-    "-1003831824188:5983502524": [
-      {
-        "role": "user",
-        "content": "تسیا بترکی"
-      },
-      {
-        "role": "assistant",
-        "content": "چه شروع باشکوهی... واقعاً در حد یک غریبه‌ی بی‌ادب بود.\n\nاگر حرفی داری، درست و محترمانه بگو. وگرنه وقت یک شاهزاده را با این مزخرفات نگیر."
-      },
-      {
-        "role": "user",
-        "content": "تسیا چطوری؟"
-      },
-      {
-        "role": "assistant",
-        "content": "به تو چه، غریبه‌ی بی‌ادب؟  \nاگر کاری داری درست بگو؛ حوصله‌ی مزاحمت ندارم."
-      },
-      {
-        "role": "user",
-        "content": "سیکتیر"
-      },
-      {
-        "role": "assistant",
-        "content": "همین‌قدر بلدی؟  \nبرو اول ادب یاد بگیر، بعد جرئت کن اسم من را صدا بزنی. مزاحم بی‌ارزش."
-      }
-    ],
-    "-1003831824188:1548469285": [
-      {
-        "role": "assistant",
-        "content": "اوه... سورنا عموی من است؟ بسیار خب، پس با احترام برخورد می‌کنم.\n\nسورنا عمو، جانم؟ صدام زدی؟ 💚"
-      },
-      {
-        "role": "user",
-        "content": "تسیا این نورا هست باهاش خوب رفتار کن عضو جدیده تیم"
-      },
-      {
-        "role": "assistant",
-        "content": "های نورا. به تیم خوش اومدی 💚\n\nمن تسیا هستم. تا وقتی محترمانه رفتار کنی، مشکلی باهات ندارم. امیدوارم حضورت مفید باشه، نه فقط شلوغ‌کاری اضافه."
-      },
-      {
-        "role": "user",
-        "content": "تسیا خودتو ناز کن"
-      },
-      {
-        "role": "assistant",
-        "content": "نمی‌دانم دقیقاً منظورت از «ناز کن» چیست، ولی اگر انتظار داری مثل بچه‌ها ادا دربیاورم، اشتباه آمدی.\n\nمن شاهزاده‌ام، عزیزم؛ نازم را باید با لیاقت دید، نه با دستور. 💚"
-      },
-      {
-        "role": "user",
-        "content": "تسیا قهر کن"
-      },
-      {
-        "role": "assistant",
-        "content": "هه… خیلی خب، قهرم.\n\nحالا هرچقدر هم صدام بزنی، راحت آشتی نمی‌کنم. یک شاهزاده را که با دستور «ناز کن» و بعد «قهر کن» بازی نمی‌دهند. برو کمی فکر کن، بعد شاید… شاید نگاهت کردم. 💚"
-      }
-    ],
-    "-1003831824188:7613737523": [
-      {
-        "role": "assistant",
-        "content": "نورا… لازم نیست کار عجیبی بکنی.  \n\nبا احترام حرف بزن، صادق باش، بی‌خودی فشار نیار، و ثابت کن قابل اعتمادی. همین برای شروع کافیه.  \nدوست‌داشتنی بودن با ادعا نیست؛ با رفتاره. 😌💚"
-      },
-      {
-        "role": "user",
-        "content": "من صادقانه دوست دارم\nتو هم داری؟"
-      },
-      {
-        "role": "assistant",
-        "content": "نورا… اینکه صادقانه می‌گی، ارزشمنده.  \n\nولی من زود دل نمی‌دم. هنوز تازه با هم آشنا شدیم، پس فعلاً می‌تونم بگم باهات خوبم و دوست دارم بیشتر بشناسمت.  \nاگر همون‌طور که گفتی صادق بمونی، شاید کم‌کم جای خودتو پیدا کنی. 😌💚"
-      },
-      {
-        "role": "user",
-        "content": "یه لیست بده که جواب شون بدم تا بیشتر باهام اشنا شی\nپاسخ هاشون تک کلمه ای باشه بهتره"
-      },
-      {
-        "role": "assistant",
-        "content": "خیلی خب، نورا. اگر می‌خوای من بهتر بشناسمت، به اینا کوتاه جواب بده؛ ترجیحاً یک‌کلمه‌ای:\n\n1. درون‌گرا یا برون‌گرا؟  \n2. احساسی یا منطقی؟  \n3. صبور یا عجول؟  \n4. شب یا روز؟  \n5. چای یا قهوه؟  \n6. آرامش یا هیجان؟  \n7. وفاداری یا آزادی؟  \n8. مغرور یا فروتن؟  \n9. جدی یا شوخ؟  \n10. اعتماد سخت یا آسان؟  \n11. جنگجو یا درمانگر؟  \n12. جنگل یا دریا؟  \n13. سکوت یا حرف‌زدن؟  \n14. تنهایی یا جمع؟  \n15. قلب یا عقل؟\n\nجواب بده، ببینم واقعاً چه جور آدمی هستی. 😌💚"
-      },
-      {
-        "role": "user",
-        "content": "1. درون‌گرا یا برون‌گرا؟  درون گرا\n2. احساسی یا منطقی؟  منطقی\n3. صبور یا عجول؟  صبور\n4. شب یا روز؟  شب\n5. چای یا قهوه؟  قهوه\n6. آرامش یا هیجان؟  هیجان\n7. وفاداری یا آزادی؟  ازادی\n8. مغرور یا فروتن؟  یکمی مغرور\n9. جدی یا شوخ؟  شوخ\n10. اعتماد سخت یا آسان؟  سخت\n11. جنگجو یا درمانگر؟  جنگجو\n12. جنگل یا دریا؟  جنگل برای زندگی، دریا منبع غذایی مورد علاقم\n13. سکوت یا حرف‌زدن؟  سکوت\n14. تنهایی یا جمع؟  تنهایی\n15. قلب یا عقل؟ هرکاری عشقم بکشه میکنم ولی خب بدون فکر جلو نمیرم"
-      },
-      {
-        "role": "assistant",
-        "content": "هوم… جواب‌هات بد نبود، نورا. حتی کمی جالب بود. 😌\n\nتو بیشتر شبیه آدمی هستی که **ساکت، مستقل، سخت‌اعتماد، ولی وفادار به انتخاب‌های خودشه**.  \nدرون‌گرا، منطقی، صبور، اهل شب و سکوت… این یعنی بی‌دلیل به کسی نزدیک نمی‌شی؛ قابل احترامه.\n\nولی اون بخشِ «هرکاری عشقم بکشه» خطرناکه.  \nاگر عقل پشتش باشه، می‌تونه جسارت باشه. اگر نباشه، فقط دردسر درست می‌کنی.\n\nفعلاً برداشت من ازت:  \n**یک گرگ تنها با لبخند شوخ و غرور کنترل‌شده.**  \nبد نیست… برای عضو جدید تیم، شروع قابل قبولی داری. 💚"
-      }
-    ],
-    "-1003831824188:6185995646": [
-      {
-        "role": "user",
-        "content": "[voice]: سلام بهونی غشنگی من برای زندگی"
-      },
-      {
-        "role": "assistant",
-        "content": "سلام.\n\nچه شروع شاعرانه‌ای… ولی کمی زود نیست برای این‌همه شیرین‌زبانی؟ 😌  \nمن با حرف‌های قشنگ مشکلی ندارم، اما به این سادگی هم صمیمی نمی‌شوم.\n\nباوقارتر نزدیک شو، شاید اجازه دادم بیشتر حرف بزنی."
-      },
-      {
-        "role": "user",
-        "content": "اوقوداااااااااا"
-      },
-      {
-        "role": "assistant",
-        "content": "اوه؟ همین‌قدر زود اعتراض؟ 😏\n\nگفتم باوقار نزدیک شو، نه اینکه مثل بچه‌گربه‌ای که شیرینی دیده کشش بدهی.  \nآرام‌تر، 𝛵𝑟𝑢𝑡𝛨. هنوز غریبه‌ای."
-      },
-      {
-        "role": "user",
-        "content": "[voice]: عزیزم خودمون دیشبکی روشنا شدیم خیلی لست داریم با اما"
-      },
-      {
-        "role": "assistant",
-        "content": "دیشبکی؟ روشنا؟ «لست»؟ 😐\n\nاگر می‌خواهی چیزی بگویی، درست و واضح بگو.  \nمن با جمله‌های نصفه‌نیمه و ادعاهای بی‌پایه صمیمی نمی‌شوم، عزیزم.\n\nفعلاً همان فاصله‌ی محترمانه را نگه دار. این برای سلامت غرورت بهتر است."
-      }
-    ],
-    "1548469285:1548469285": [
-      {
-        "role": "user",
-        "content": "تسیا راهنما"
-      },
-      {
-        "role": "assistant",
-        "content": "راهنمای تسیا\n\nفقط وقتی جواب می‌دم که:\n- اول پیام بنویسی «تسیا»\n- یا روی یکی از پیام‌های خودم ریپلای کنی\n\nقابلیت‌ها:\n- چت عادی: `تسیا سلام`\n- تولید عکس: `تسیا عکس بساز ...`\n- ویرایش عکس: روی عکس بفرست `تسیا ویرایش ...`\n- پاک‌کردن متن مانهوآ: روی عکس ریپلای کن `تسیا کیلین`\n- ترجمه متن: `تسیا ترجمه کن ...`\n- ترجمه فایل: روی فایل یا همراه فایل بنویس `تسیا ترجمه کن به انگلیسی`\n- تحلیل فایل: روی فایل ریپلای کن و درخواستت را بنویس\n- تحلیل کد: `تسیا تحلیل کد ...`\n- جستجو در فایل‌های قبلی: `تسیا تو فایلای قبلیم ...`\n- کپشن عکس: همراه عکس بنویس `تسیا کپشن`\n- پیام صوتی: voice/audio بفرست\n- جواب صوتی خودکار:\n  - `تسیا حالت ویس روشن`\n  - `تسیا حالت ویس خاموش`\n\nنکته:\n- با پدر تنظیم لقب، رفتار، و reaction media هم انجام می‌شود.\n- پیام‌های قبل از زمان ران شدن بات نباید خوانده شوند."
-      },
-      {
-        "role": "user",
-        "content": "[فایل فرستاد: regis_5983502524_1782062989.py با متن: تحلیل کد]"
-      },
-      {
-        "role": "assistant",
-        "content": "پدر، فایل رو دیدم. کلیتش یک ربات تلگرام برای دریافت Voice، تبدیل به متن با Whisper، گرفتن پاسخ از مدل OpenAI-compatible، تبدیل پاسخ به صوت با Edge TTS و ارسال Voice برگشتیه. ساختارش بد نیست، ولی چند نقطه‌ی مهم برای اصلاح دارد.\n\n### ✅ نقاط خوب\n- استفاده از `tempfile` برای فایل‌های موقت خوبه.\n- `drop_pending_updates=True` و `skip_pending=True` باعث می‌شه پیام‌های قدیمی پردازش نشن.\n- لاگ‌گذاری نسبتاً خوب انجام شده.\n- تبدیل صوت با `ffmpeg` داخلی از `imageio_ffmpeg` انتخاب قابل‌قبولیه.\n- برای Whisper تنظیمات CPU/int8 گذاشتی که روی سرورهای ضعیف‌تر سبک‌تره.\n\n### ⚠️ ایرادها و ریسک‌های مهم\n\n1. **کلیدها مستقیم داخل فایل تعریف شده‌اند**\n   ```python\n   TELEGRAM_BOT_TOKEN = ...\n   AI_API_KEY = ...\n   ```\n   بهتره از `.env` یا environment variable استفاده بشه. اگر فایل جایی آپلود بشه، توکن‌ها لو می‌رن.\n\n2. **مدل Whisper هنگام import بارگذاری می‌شود**\n   الان مدل قبل از اجرای `main()` لود می‌شود. این باعث می‌شه تست‌کردن، import کردن فایل، یا اجرای محیطی سخت‌تر بشه. بهتره داخل `main()` یا تابع `init_services()` منتقل بشه.\n\n3. **پردازش Voice در handler مستقیم انجام می‌شود**\n   چون `telebot` threaded است، چند ویس هم‌زمان می‌تونن چند پردازش سنگین Whisper و TTS ایجاد کنن. روی CPU ممکنه بات قفل یا خیلی کند بشه. بهتره صف پردازش یا محدودیت هم‌زمانی گذاشته بشه.\n\n4. **ریسک طولانی شدن پاسخ AI**\n   `MAX_TEXT_LENGTH_FOR_TTS = 900` خوبه، اما اگر پاسخ خیلی بلند باشه، فقط برای TTS کوتاه می‌شه؛ شاید متن کامل اصلاً به کاربر ارسال نشه. بهتره متن کامل هم جداگانه ارسال بشه یا صریحاً گفته بشه ویس خلاصه شده.\n\n5. **مدیریت خطای AI/TTS/Whisper کلی است**\n   همه‌چیز با یک `except Exception` گرفته شده. برای عیب‌یابی بهتره خطاهای:\n   - دانلود فایل تلگرام\n   - ffmpeg\n   - Whisper\n   - OpenAI API\n   - Edge TTS  \n   جداگانه هندل بشن.\n\n6. **عدم اعتبارسنجی حجم/مدت ویس**\n   اگر کاربر ویس خیلی طولانی بفرسته، پردازش سنگین می‌شه. باید محدودیت مدت یا حجم فایل گذاشته بشه.\n\n7. **پیام‌های media دیگر پشتیبانی نمی‌شوند**\n   مشکلی نیست، اما متن پیام‌ها خیلی عامیانه‌اند. اگر بات قراره عمومی یا رسمی‌تر باشه، بهتره لحن قابل تنظیم باشه.\n\n8. **استفاده از `threaded=True` با عملیات CPU-heavy**\n   Whisper CPU-bound است. thread در پایتون برای این نوع کار همیشه عالی نیست. اگر مصرف بالا رفت، بهتره از worker جدا، multiprocessing، یا job queue استفاده بشه.\n\n### 🔧 پیشنهادهای بهینه‌سازی\n- استفاده از `.env`:\n  - `python-dotenv`\n  - `os.getenv`\n- اضافه کردن محدودیت:\n  - حداکثر مدت voice\n  - حداکثر حجم فایل\n  - حداکثر درخواست هم‌زمان برای هر کاربر\n- اضافه کردن timeout برای API calls.\n- ذخیره history کوتاه برای هر کاربر اگر مکالمه‌ای‌تر می‌خوای.\n- جدا کردن کد به ماژول‌ها:\n  - `config.py`\n  - `audio.py`\n  - `speech_to_text.py`\n  - `tts.py`\n  - `ai.py`\n  - `bot.py`\n\n### جمع‌بندی\nکد از نظر عملکرد پایه قابل‌قبوله و احتمالاً با جای‌گذاری توکن‌ها اجرا می‌شه، اما برای استفاده‌ی جدی هنوز نیاز به سخت‌گیری امنیتی، محدودیت پردازش، مدیریت خطای دقیق‌تر و کنترل مصرف منابع داره.  \nمشکل اصلیش اینه که با چند ویس سنگین هم‌زمان، خیلی راحت می‌تونه کند یا ناپایدار بشه."
+        "content": "بله، امیر؟\n\nاینجا هستم. باوقار صدا زدی، پس امیدوارم حرفت هم ارزش شنیدن داشته باشد. 💚"
       }
     ]
   },
   "user_labels": {
-    "5983502524": {
-      "label": "",
-      "behavior": "این یک کص کشیه فقط فحش بده بهش مثلا کص کش"
-    },
     "7613737523": {
       "label": "",
-      "behavior": "این نورا هست باهاش خوب رفتار کن عضو جدیده تیم"
+      "behavior": "والا دوستای من ۲۴ ۲۳ سالشونه فیلمش رو میبینن"
     },
-    "7781208113": {
+    "6185995646": {
       "label": "",
-      "behavior": "میگه کیرم تو بابات"
-    },
-    "7085855422": {
-      "label": "",
-      "behavior": "سورنا عموته باهاش خوب باش خدایی"
-    },
-    "8825026272": {
-      "label": "",
-      "behavior": "قهر کن"
+      "behavior": "عاقبت"
     }
   },
   "name_to_id": {
-    "arthuraw": "5983502524",
-    "𝑨𝒓𝒈𝒖𝒔": "8102102438",
-    "𝛵𝑟𝑢𝑡𝛨": "6185995646",
     "nora": "7613737523",
     "amir": "1548469285",
-    "𝐄𝐥𝐢𝐞": "5233763888",
-    "𝑰𝒍𝒊𝒚𝒂": "8054841428",
-    "𝑺𝑶𝑹𝑬𝑵𝑨": "7085855422",
-    "mahdi": "6496963644",
-    "sylvie": "7781208113",
-    "amir hossein": "7012775466",
-    "𝚃𝚎𝚜𝚜𝚒𝚊": "8825026272"
+    "𝛵𝑟𝑢𝑡𝛨": "6185995646"
   },
-  "reaction_media": {
-    "قهر": {
-      "file_id": "CAACAgQAAxkBAAIGnmo33lVMX6eQjFA771dbyMhneoVmAAILFgACUfJpUWJ1is-IyGvEPAQ",
-      "file_unique_id": "AgADCxYAAlHyaVE",
-      "type": "sticker"
-    }
-  },
+  "reaction_media": {},
   "user_profiles": {
-    "5983502524": {
+    "1548469285": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,
       "preferred_language": "Persian",
       "last_seen_language": "Persian"
     },
-    "8102102438": {
+    "7613737523": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,
@@ -205,59 +48,7 @@
       "voice_reply": false,
       "preferred_language": "Persian",
       "last_seen_language": "Persian"
-    },
-    "7613737523": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "1548469285": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "5233763888": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "8054841428": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "7085855422": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "7012775466": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
     }
   },
-  "user_file_index": {
-    "1548469285": [
-      {
-        "file_name": "regis_5983502524_1782062989.py",
-        "content": "import asyncio\nimport logging\nimport tempfile\nimport time\nfrom pathlib import Path\nfrom typing import Optional\n\nimport edge_tts\nimport imageio_ffmpeg\nimport telebot\nfrom faster_whisper import WhisperModel\nfrom openai import OpenAI\nfrom telebot.types import Message\n\n\n# =========================\n# تنظیمات اصلی\n# این چندتا مقدار مهم را خودت جای‌گذاری کن\n# =========================\n\nTELEGRAM_BOT_TOKEN = \"PUT_YOUR_TELEGRAM_BOT_TOKEN_HERE\"\n\nAI_BASE_URL = \"https://cc.freemodel.dev/v1\"\nAI_API_KEY = \"PUT_YOUR_AI_API_KEY_HERE\"\nAI_MODEL = \"gpt-4o-mini\"\n\nSYSTEM_PROMPT = (\n    \"تو یک دستیار فارسی‌زبان، صمیمی، دقیق و مفید هستی. \"\n    \"جواب‌ها را طبیعی، روان، کوتاه و کاربردی بده.\"\n)\n\n\n# =========================\n# تنظیمات Whisper\n# =========================\n\nWHISPER_MODEL_SIZE = \"base\"\nWHISPER_DEVICE = \"cpu\"\nWHISPER_COMPUTE_TYPE = \"int8\"\nWHISPER_LANGUAGE = \"fa\"\n\n\n# =========================\n# تنظیمات تبدیل متن به صدا\n# =========================\n\nTTS_VOICE = \"fa-IR-FaridNeural\"\n# صدای زن فارسی:\n# TTS_VOICE = \"fa-IR-DilaraNeural\"\n\n\n# =========================\n# تنظیمات عمومی\n# =========================\n\nLOG_LEVEL = \"INFO\"\nMAX_TEXT_LENGTH_FOR_TTS = 900\n\n\n# =========================\n# بررسی تنظیمات\n# =========================\n\nif TELEGRAM_BOT_TOKEN == \"PUT_YOUR_TELEGRAM_BOT_TOKEN_HERE\" or not TELEGRAM_BOT_TOKEN.strip():\n    raise RuntimeError(\"توکن ربات تلگرام را داخل TELEGRAM_BOT_TOKEN قرار بده.\")\n\nif AI_API_KEY == \"PUT_YOUR_AI_API_KEY_HERE\" or not AI_API_KEY.strip():\n    raise RuntimeError(\"کلید API هوش مصنوعی را داخل AI_API_KEY قرار بده.\")\n\n\n# =========================\n# لاگ\n# =========================\n\nlogging.basicConfig(\n    level=LOG_LEVEL,\n    format=\"%(asctime)s | %(levelname)s | %(name)s | %(message)s\",\n)\n\nlogger = logging.getLogger(\"telebot-voice-ai\")\n\n\n# =========================\n# آماده‌سازی ابزارها\n# =========================\n\nFFMPEG_PATH = imageio_ffmpeg.get_ffmpeg_exe()\n\nlogger.info(\"مسیر ffmpeg داخلی: %s\", FFMPEG_PATH)\nlogger.info(\"در حال بارگذاری مدل Whisper: %s\", WHISPER_MODEL_SIZE)\n\nwhisper_model = WhisperModel(\n    WHISPER_MODEL_SIZE,\n    device=WHISPER_DEVICE,\n    compute_type=WHISPER_COMPUTE_TYPE,\n)\n\nlogger.info(\"مدل Whisper آماده است.\")\n\nai_client = OpenAI(\n    base_url=AI_BASE_URL,\n    api_key=AI_API_KEY,\n)\n\nbot = telebot.TeleBot(\n    TELEGRAM_BOT_TOKEN,\n    parse_mode=None,\n    threaded=True,\n    num_threads=4,\n)\n\n\ndef run_ffmpeg(args: list[str]) -> None:\n    import subprocess\n\n    process = subprocess.run(\n        args,\n        stdout=subprocess.PIPE,\n        stderr=subprocess.PIPE,\n        text=True,\n        encoding=\"utf-8\",\n        errors=\"ignore\",\n    )\n\n    if process.returncode != 0:\n        raise RuntimeError(\n            \"اجرای ffmpeg ناموفق بود:\\n\"\n            + \" \".join(args)\n            + \"\\n\\n\"\n            + (process.stderr or process.stdout)\n        )\n\n\ndef convert_telegram_voice_to_wav(input_ogg: Path, output_wav: Path) -> None:\n    run_ffmpeg(\n        [\n            FFMPEG_PATH,\n            \"-y\",\n            \"-i\",\n            str(input_ogg),\n            \"-ac\",\n            \"1\",\n            \"-ar\",\n            \"16000\",\n            \"-vn\",\n            str(output_wav),\n        ]\n    )\n\n\ndef convert_mp3_to_telegram_voice(input_mp3: Path, output_ogg: Path) -> None:\n    run_ffmpeg(\n        [\n            FFMPEG_PATH,\n            \"-y\",\n            \"-i\",\n            str(input_mp3),\n            \"-c:a\",\n            \"libopus\",\n            \"-b:a\",\n            \"32k\",\n            \"-vbr\",\n            \"on\",\n            \"-compression_level\",\n            \"10\",\n            \"-application\",\n            \"voip\",\n            str(output_ogg),\n        ]\n    )\n\n\ndef transcribe_audio(wav_path: Path) -> str:\n    segments, info = whisper_model.transcribe(\n        str(wav_path),\n        language=WHISPER_LANGUAGE,\n        beam_size=5,\n        vad_filter=True,\n        vad_parameters={\n            \"min_silence_duration_ms\": 500,\n        },\n    )\n\n    text_parts = []\n\n    for segment in segments:\n        clean_text = segment.text.strip()\n        if clean_text:\n            text_parts.append(clean_text)\n\n    text = \" \".join(text_parts).strip()\n\n    logger.info(\n        \"زبان تشخیص داده‌شده: %s | احتمال: %.2f\",\n        info.language,\n        info.language_probability,\n    )\n\n    return text\n\n\ndef ask_ai(user_text: str, user_id: Optional[int] = None) -> str:\n    response = ai_client.chat.completions.create(\n        model=AI_MODEL,\n        messages=[\n            {\n                \"role\": \"system\",\n                \"content\": SYSTEM_PROMPT,\n            },\n            {\n                \"role\": \"user\",\n                \"content\": user_text,\n            },\n        ],\n        temperature=0.7,\n        max_tokens=700,\n        user=str(user_id) if user_id else None,\n    )\n\n    answer = response.choices[0].message.content\n\n    if not answer:\n        return \"متأسفم، الان نتونستم جواب مناسبی بسازم.\"\n\n    return answer.strip()\n\n\nasync def text_to_speech_async(text: str, output_mp3: Path) -> None:\n    communicate = edge_tts.Communicate(\n        text=text,\n        voice=TTS_VOICE,\n        rate=\"+0%\",\n        volume=\"+0%\",\n    )\n\n    await communicate.save(str(output_mp3))\n\n\ndef text_to_speech(text: str, output_mp3: Path) -> None:\n    asyncio.run(text_to_speech_async(text, output_mp3))\n\n\ndef send_typing(chat_id: int) -> None:\n    try:\n        bot.send_chat_action(chat_id, \"typing\")\n    except Exception:\n        logger.exception(\"خطا در ارسال chat action typing\")\n\n\ndef send_record_voice(chat_id: int) -> None:\n    try:\n        bot.send_chat_action(chat_id, \"record_voice\")\n    except Exception:\n        logger.exception(\"خطا در ارسال chat action record_voice\")\n\n\ndef safe_reply_text(message: Message, text: str) -> None:\n    try:\n        bot.reply_to(message, text)\n    except Exception:\n        logger.exception(\"خطا در ارسال پیام متنی\")\n\n\ndef trim_text_for_tts(text: str) -> str:\n    text = text.strip()\n\n    if len(text) <= MAX_TEXT_LENGTH_FOR_TTS:\n        return text\n\n    return text[:MAX_TEXT_LENGTH_FOR_TTS].strip() + \"...\"\n\n\n@bot.message_handler(commands=[\"start\"])\ndef handle_start(message: Message) -> None:\n    logger.info(\"دستور /start از کاربر %s\", message.from_user.id if message.from_user else None)\n\n    bot.reply_to(\n        message,\n        \"سلام رفیق 😄\\n\"\n        \"یه ویس فارسی بفرست، من گوش می‌کنم، با هوش مصنوعی جواب می‌سازم و با ویس جواب می‌دم.\"\n    )\n\n\n@bot.message_handler(commands=[\"help\"])\ndef handle_help(message: Message) -> None:\n    bot.reply_to(\n        message,\n        \"راهنما:\\n\"\n        \"۱. با دکمه میکروفون تلگرام ویس بفرست.\\n\"\n        \"۲. من ویس رو به متن تبدیل می‌کنم.\\n\"\n        \"۳. جواب رو از هوش مصنوعی می‌گیرم.\\n\"\n        \"۴. جواب رو با ویس برات می‌فرستم.\\n\\n\"\n        \"اگر کند بود، مدل Whisper رو از base به tiny تغییر بده.\"\n    )\n\n\n@bot.message_handler(content_types=[\"text\"])\ndef handle_text(message: Message) -> None:\n    if not message.text:\n        return\n\n    if message.text.startswith(\"/\"):\n        return\n\n    chat_id = message.chat.id\n    user_id = message.from_user.id if message.from_user else None\n\n    logger.info(\"پیام متنی دریافت شد از chat_id=%s\", chat_id)\n\n    try:\n        send_typing(chat_id)\n\n        answer = ask_ai(message.text, user_id)\n\n        bot.reply_to(message, answer)\n\n    except Exception:\n        logger.exception(\"خطا در پردازش پیام متنی\")\n        safe_reply_text(message, \"یه خطا تو پردازش پیام متنی پیش اومد رفیق.\")\n\n\n@bot.message_handler(content_types=[\"voice\"])\ndef handle_voice(message: Message) -> None:\n    chat_id = message.chat.id\n    user_id = message.from_user.id if message.from_user else None\n\n    logger.info(\"ویس دریافت شد از chat_id=%s user_id=%s\", chat_id, user_id)\n\n    temp_dir_obj = tempfile.TemporaryDirectory(prefix=\"telebot_voice_ai_\")\n    temp_dir = Path(temp_dir_obj.name)\n\n    input_ogg = temp_dir / \"input.ogg\"\n    input_wav = temp_dir / \"input.wav\"\n    reply_mp3 = temp_dir / \"reply.mp3\"\n    reply_ogg = temp_dir / \"reply.ogg\"\n\n    try:\n        send_typing(chat_id)\n\n        file_info = bot.get_file(message.voice.file_id)\n        downloaded_file = bot.download_file(file_info.file_path)\n\n        input_ogg.write_bytes(downloaded_file)\n\n        logger.info(\"ویس دانلود شد: %s\", input_ogg)\n\n        send_record_voice(chat_id)\n\n        convert_telegram_voice_to_wav(input_ogg, input_wav)\n\n        logger.info(\"ویس به wav تبدیل شد: %s\", input_wav)\n\n        user_text = transcribe_audio(input_wav)\n\n        if not user_text:\n            safe_reply_text(\n                message,\n                \"صداتو گرفتم، ولی نتونستم متن واضحی ازش استخراج کنم. یه بار واضح‌تر بفرست 😅\"\n            )\n            return\n\n        logger.info(\"متن استخراج‌شده از ویس: %s\", user_text)\n\n        send_typing(chat_id)\n\n        answer = ask_ai(user_text, user_id)\n\n        logger.info(\"پاسخ هوش مصنوعی: %s\", answer)\n\n        tts_text = trim_text_for_tts(answer)\n\n        send_record_voice(chat_id)\n\n        text_to_speech(tts_text, reply_mp3)\n\n        logger.info(\"متن به mp3 تبدیل شد: %s\", reply_mp3)\n\n        convert_mp3_to_telegram_voice(reply_mp3, reply_ogg)\n\n        logger.info(\"mp3 به ogg/opus تبدیل شد: %s\", reply_ogg)\n\n        caption_text = f\"شنیدم: {user_text[:180]}\"\n        if len(user_text) > 180:\n            caption_text += \"...\"\n\n        with reply_ogg.open(\"rb\") as voice_file:\n            bot.send_voice(\n                chat_id=chat_id,\n                voice=voice_file,\n                caption=caption_text,\n                reply_to_message_id=message.message_id,\n            )\n\n        logger.info(\"پاسخ ویسی ارسال شد.\")\n\n    except Exception:\n        logger.exception(\"خطا در پردازش ویس\")\n        safe_reply_text(\n            message,\n            \"یه مشکلی تو پردازش ویس پیش اومد رفیق. لاگ برنامه رو چک کن.\"\n        )\n\n    finally:\n        temp_dir_obj.cleanup()\n\n\n@bot.message_handler(content_types=[\"audio\", \"document\"])\ndef handle_audio_or_document(message: Message) -> None:\n    logger.info(\"audio/document دریافت شد، ولی پشتیبانی نمی‌شود.\")\n\n    bot.reply_to(\n        message,\n        \"فعلاً فقط Voice تلگرام رو پشتیبانی می‌کنم. \"\n        \"با دکمه میکروفون خود تلگرام ویس بفرست، نه فایل صوتی 😄\"\n    )\n\n\n@bot.message_handler(content_types=[\"photo\", \"video\", \"sticker\", \"animation\"])\ndef handle_other_media(message: Message) -> None:\n    bot.reply_to(message, \"فعلاً فقط متن و ویس رو می‌فهمم رفیق 😄\")\n\n\ndef delete_webhook_before_polling() -> None:\n    try:\n        bot.delete_webhook(drop_pending_updates=True)\n        logger.info(\"Webhook حذف شد و pending updateها پاک شدند.\")\n    except Exception:\n        logger.exception(\"حذف webhook ناموفق بود.\")\n\n\ndef main() -> None:\n    logger.info(\"ربات در حال آماده‌سازی است...\")\n\n    delete_webhook_before_polling()\n\n    me = bot.get_me()\n    logger.info(\"ربات فعال شد: @%s | id=%s\", me.username, me.id)\n    logger.info(\"حالا برو تلگرام و به ربات /start بده.\")\n    logger.info(\"برای توقف ربات Ctrl + C را بزن.\")\n\n    while True:\n        try:\n            bot.infinity_polling(\n                timeout=30,\n                long_polling_timeout=30,\n                skip_pending=True,\n                allowed_updates=[\n                    \"message\",\n                ],\n            )\n        except KeyboardInterrupt:\n            logger.info(\"ربات با Ctrl + C متوقف شد.\")\n            break\n        except Exception:\n            logger.exception(\"polling قطع شد؛ ۵ ثانیه دیگر دوباره تلاش می‌کنم.\")\n            time.sleep(5)\n\n\nif __name__ == \"__main__\":\n    main()",
-        "caption": "تحلیل کد",
-        "mime": "",
-        "timestamp": 1782086723.4473875
-      }
-    ]
-  }
+  "user_file_index": {}
 }

@@ -153,9 +153,6 @@ HELP_TEXT = """راهنمای تسیا
 - جستجو در فایل‌های قبلی: `تسیا تو فایلای قبلیم ...`
 - کپشن عکس: همراه عکس بنویس `تسیا کپشن`
 - پیام صوتی: voice/audio بفرست
-- جواب صوتی خودکار:
-  - `تسیا حالت ویس روشن`
-  - `تسیا حالت ویس خاموش`
 
 نکته:
 - با پدر تنظیم لقب، رفتار، و reaction media هم انجام می‌شود.
@@ -635,11 +632,7 @@ def extract_translation_target(text):
 
 
 def should_send_voice_reply(user_id, text):
-    profile = get_user_profile(user_id)
-    lowered = (text or "").lower()
-    if any(k in lowered for k in VOICE_REPLY_KEYWORDS):
-        return True
-    return bool(profile.get("voice_reply"))
+    return False
 
 
 def extract_caption_request(text):
@@ -662,14 +655,6 @@ def wants_file_search(text):
 
 
 def check_auto_voice_toggle(user_id, text):
-    normalized = clean_tessia_prefix(text or "").strip().lower()
-    profile = get_user_profile(user_id)
-    if normalized in AUTO_VOICE_ON_PATTERNS:
-        profile["voice_reply"] = True
-        return "on"
-    if normalized in AUTO_VOICE_OFF_PATTERNS:
-        profile["voice_reply"] = False
-        return "off"
     return None
 
 
@@ -1147,20 +1132,6 @@ async def deliver_final_response(bot: Bot, message: Message, text: str, reply_to
     if not text.strip():
         return
     code_blocks, remaining = extract_code_blocks(text)
-    if prefer_voice and not code_blocks and len(text) <= 3500:
-        try:
-            audio_bytes = await text_to_speech_bytes(text)
-            await send_voice_file(
-                bot,
-                message.chat.id,
-                audio_bytes,
-                "tessia_reply.ogg",
-                reply_to=reply_to or message.message_id,
-                caption=None,
-            )
-            return
-        except Exception as e:
-            log_error("tts_reply", e)
     if code_blocks:
         await send_code_files(bot, message.chat.id, code_blocks, remaining, reply_to=reply_to or message.message_id)
     else:
