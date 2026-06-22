@@ -10,7 +10,7 @@ OPENAI_AUDIO_API_KEY = "fe_oa_7263e0230539d1411bac6804806de6aee6ffcc836b3dd2bb"
 OPENAI_AUDIO_BASE_URL = os.getenv("OPENAI_AUDIO_BASE_URL", "https://api.openai.com/v1")
 MODEL_NAME = os.getenv("MODEL_NAME", "gpt-5.5")
 
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_BASE_URL = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
 IMAGE_MODEL_NAME = os.getenv("IMAGE_MODEL_NAME", "google/gemini-2.5-flash-image")
 TRANSCRIBE_MODEL = os.getenv("TRANSCRIBE_MODEL", "openai/whisper-large-v3-turbo")
