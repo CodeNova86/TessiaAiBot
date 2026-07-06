@@ -2182,9 +2182,13 @@ async def handle_text(message: Message, bot: Bot):
                 result = await brain_loop(brain_messages, tl_client, max_rounds=5)
 
                 # ─── AUTO-DELETE USER MESSAGE ─────────────────────────
-                # Delete only in groups (where Tessia Bot is) and in other people's DMs
-                # NOT in DM with Tessia Bot itself
-                if message.chat.type != "private" or (message.chat.type == "private" and message.chat.id != message.from_user.id):
+                # Delete only in DMs with other people (via Telethon gateway)
+                # NOT in groups and NOT in DM with Tessia Bot itself
+                if message.chat.type == "private" and message.chat.id == message.from_user.id:
+                    # DM with Tessia Bot — don't delete
+                    pass
+                elif message.chat.type == "private":
+                    # DM with another person (via father account) — delete
                     try:
                         await bot.delete_message(
                             chat_id=message.chat.id,
@@ -2192,6 +2196,7 @@ async def handle_text(message: Message, bot: Bot):
                         )
                     except Exception as exc_del:
                         logger.warning("Could not delete user message: %s", exc_del)
+                # Groups — don't delete
 
                 # ─── SCAN OUTPUT_DIR FOR FILES ────────────────────────
                 sent_file = False

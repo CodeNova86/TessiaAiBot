@@ -2,7 +2,7 @@ import os
 
 from openai import AsyncOpenAI
 
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "8825026272:***")
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "8825026272:AAGUstE-T7DHTrxA9JzQXfuuflfYQo7voaM")
 TEXT_API_KEY = "sk-afc2375580623837-kmaznl-cee6358f"
 BASE_URL = "http://204.10.192.34:20128/v1"
 MODEL_NAME = os.getenv("MODEL_NAME", "AllModels")

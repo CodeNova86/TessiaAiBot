@@ -343,6 +343,10 @@ async def build_recent_chat_messages(
 
 async def handle_new_message(event, client_user):
     """Main event handler — check gates, then run the brain."""
+    # NEVER respond in groups — private chats only
+    if not event.is_private:
+        return
+
     try:
         direction = "OUT" if event.out else "IN"
         text_preview = (event.raw_text or "")[:50]
@@ -355,25 +359,11 @@ async def handle_new_message(event, client_user):
         raw_lower = raw_text.lower()
         is_self_command = bool(event.out and raw_lower.startswith("تسیا"))
 
-        # Allow private chats (with trigger word) AND group messages
-        is_group = False
-        if event.is_private:
-            # In private chats (father's DMs), respond only to:
-            # - our own outgoing commands starting with "تسیا"
-            # - whitelisted incoming commands starting with trigger words
+        # In private chats, only respond to trigger words or self-commands
+        if not is_self_command:
             triggers = ["تسیا", "@admin", "admin", "father", "پدر"]
             if not any(raw_lower.startswith(t) for t in triggers):
                 return
-        else:
-            # In groups, only respond if the message contains a trigger keyword
-            my_username = (getattr(me, "username", "") or "").lower()
-            triggers = ["@admin", "admin", "father", "پدر"]
-            if my_username:
-                triggers.append(f"@{my_username}")
-                triggers.append(my_username)
-            if not any(t in raw_lower for t in triggers):
-                return
-            is_group = True
         
         sender = await event.get_sender()
         if sender is None or getattr(sender, "bot", False):
