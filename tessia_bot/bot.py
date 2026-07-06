@@ -47,7 +47,8 @@ from tessia_bot.config import (
     SUMMARY_TRIGGER_MESSAGES,
     TELEGRAM_TOKEN,
     client,
-    or_client,
+    OPENROUTER_API_KEY,
+    OPENROUTER_BASE_URL,
     TRANSCRIBE_MODEL,
 )
 from tessia_bot.father_control import (
@@ -1632,14 +1633,13 @@ def save_base64_to_file(base64_data_url: str) -> str:
 
 async def generate_image_openrouter(prompt: str):
     try:
-        response = await asyncio.to_thread(
-            or_client.chat.send,
+        response = await client.chat.completions.create(
             model=IMAGE_MODEL_NAME,
-            modalities=["text", "image"],
             messages=[{
                 "role": "user",
                 "content": f"Generate an image for this request: {prompt}. Return the final image."
-            }]
+            }],
+            stream=False,
         )
         return extract_image_from_response(response)
     except Exception as e:
@@ -1649,10 +1649,8 @@ async def generate_image_openrouter(prompt: str):
 
 async def edit_image_openrouter(base64_img: str, prompt: str):
     try:
-        response = await asyncio.to_thread(
-            or_client.chat.send,
+        response = await client.chat.completions.create(
             model=IMAGE_MODEL_NAME,
-            modalities=["text", "image"],
             temperature=0,
             messages=[{
                 "role": "user",
@@ -1660,7 +1658,8 @@ async def edit_image_openrouter(base64_img: str, prompt: str):
                     {"type": "image_url", "image_url": {"url": base64_img}},
                     {"type": "text", "text": f"Edit this image based on the following instruction: {prompt}\nOnly output the final edited image."}
                 ]
-            }]
+            }],
+            stream=False,
         )
         return extract_image_from_response(response)
     except Exception as e:
@@ -1752,8 +1751,7 @@ async def ask_gemini_vision(parts: list, prompt: str) -> str:
     full_text_response = []
     for i, part_b64 in enumerate(parts):
         try:
-            response = await asyncio.to_thread(
-                or_client.chat.send,
+            response = await client.chat.completions.create(
                 model=IMAGE_MODEL_NAME,
                 messages=[{
                     "role": "user",
@@ -1761,7 +1759,8 @@ async def ask_gemini_vision(parts: list, prompt: str) -> str:
                         {"type": "text", "text": prompt + (f"\n(This is part {i+1} of {len(parts)})" if len(parts) > 1 else "")},
                         {"type": "image_url", "image_url": {"url": part_b64}}
                     ]
-                }]
+                }],
+                stream=False,
             )
             res_text = response.choices[0].message.content
             if isinstance(res_text, str):

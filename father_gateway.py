@@ -344,6 +344,9 @@ async def build_recent_chat_messages(
 async def handle_new_message(event, client_user):
     """Main event handler — check gates, then run the brain."""
     try:
+        direction = "OUT" if event.out else "IN"
+        text_preview = (event.raw_text or "")[:50]
+        logger.info("[DEBUG] Event received: %s, text=%s, is_private=%s", direction, text_preview, event.is_private)
         if not is_gateway_runtime_enabled():
             return
         
@@ -494,12 +497,8 @@ async def main():
         len(startup_whitelist.get("allowed_usernames", [])),
     )
 
-    @client_user.on(events.NewMessage(func=lambda e: e.out and (e.raw_text or "").strip().lower().startswith("تسیا")))
-    async def self_command_handler(event):
-        await handle_new_message(event, client_user)
-
-    @client_user.on(events.NewMessage(incoming=True))
-    async def incoming_handler(event):
+    @client_user.on(events.NewMessage)
+    async def event_handler(event):
         await handle_new_message(event, client_user)
 
     await client_user.start()

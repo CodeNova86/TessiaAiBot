@@ -1,17 +1,14 @@
 import os
 
 from openai import AsyncOpenAI
-from openrouter import OpenRouter
 
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "8825026272:AAGUstE-T7DHTrxA9JzQXfuuflfYQo7voaM")
-TEXT_API_KEY = "fe_oa_7263e0230539d1411bac6804806de6aee6ffcc836b3dd2bb"
-BASE_URL = os.getenv("TEXT_BASE_URL", "https://api.freemodel.dev/v1")
-OPENAI_AUDIO_API_KEY = "fe_oa_7263e0230539d1411bac6804806de6aee6ffcc836b3dd2bb"
-OPENAI_AUDIO_BASE_URL = os.getenv("OPENAI_AUDIO_BASE_URL", "https://api.openai.com/v1")
-MODEL_NAME = os.getenv("MODEL_NAME", "gpt-5.5")
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "8825026272:***")
+TEXT_API_KEY = "sk-afc2375580623837-kmaznl-cee6358f"
+BASE_URL = "http://204.10.192.34:20128/v1"
+MODEL_NAME = os.getenv("MODEL_NAME", "AllModels")
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
-OPENROUTER_BASE_URL = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+OPENROUTER_API_KEY = TEXT_API_KEY
+OPENROUTER_BASE_URL = BASE_URL
 IMAGE_MODEL_NAME = os.getenv("IMAGE_MODEL_NAME", "google/gemini-2.5-flash-image")
 TRANSCRIBE_MODEL = os.getenv("TRANSCRIBE_MODEL", "openai/whisper-large-v3-turbo")
 EDGE_TTS_VOICE = os.getenv("EDGE_TTS_VOICE", "fa-IR-DilaraNeural")
@@ -59,5 +56,3 @@ CLEAN_MANHWA_PROMPT = (
 )
 
 client = AsyncOpenAI(api_key=TEXT_API_KEY, base_url=BASE_URL)
-or_client = OpenRouter(api_key=OPENROUTER_API_KEY)
-24781074

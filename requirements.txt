@@ -2,7 +2,6 @@ aiogram==3.29.0
 edge-tts==7.2.8
 httpx==0.28.1
 openai==2.43.0
-openrouter==0.10.0
 pillow==12.2.0
 pydantic==2.13.4
 telethon==1.44.0
