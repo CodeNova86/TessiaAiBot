@@ -7,17 +7,65 @@
       },
       {
         "role": "assistant",
-        "content": "بله، امیر؟  \nصدایم کردی؛ بگو چه می‌خواهی."
+        "content": "جانم، امیر؟  \nصدایم زدی… چه کاری با من داری؟ 💚"
+      }
+    ],
+    "1548469285:1548469285": [
+      {
+        "role": "user",
+        "content": "تسیا https://www.instagram.com/reel/DabGCmOTexQ/?igsh=MWIxOXp6ZjR5aDlqbA==\nبرام دانلودش کن"
+      },
+      {
+        "role": "assistant",
+        "content": "پدرجان، اگر ریل عمومی است و اجازه دانلودش را داری، این سریع‌ترین راهه:\n\n```bash\npip install -U yt-dlp\nyt-dlp \"https://www.instagram.com/reel/DabGCmOTexQ/?igsh=MWIxOXp6ZjR5aDlqbA==\"\n```\n\nاگر کیفیت بهتر می‌خواهی:\n\n```bash\nyt-dlp -f best \"https://www.instagram.com/reel/DabGCmOTexQ/?igsh=MWIxOXp6ZjR5aDlqbA==\"\n```\n\nاگر اکانت لازم داشت، باید با کوکی مرورگرت بگیری:\n\n```bash\nyt-dlp --cookies-from-browser chrome \"https://www.instagram.com/reel/DabGCmOTexQ/?igsh=MWIxOXp6ZjR5aDlqbA==\"\n```\n\nاگر خواستی، لینک یا خطایی که می‌دهد را بفرست تا خودم مرتبش کنم، پدر عزیزم 💚"
       }
     ]
   },
-  "user_labels": {},
+  "user_labels": {
+    "8825026272": {
+      "label": "",
+      "behavior": "میخوام عکس پروفایلم رو بفرستی"
+    }
+  },
   "name_to_id": {
-    "amir": "1548469285"
+    "amir": "1548469285",
+    "𝚃𝚎𝚜𝚜𝚒𝚊": "8825026272",
+    "mahdi": "6496963644",
+    "a.la": "1884631813",
+    "mat": "6168977128",
+    "sina": "1564563792"
   },
   "reaction_media": {},
   "user_profiles": {
     "1548469285": {
+      "relationship": "stranger",
+      "memory_summary": "",
+      "voice_reply": false,
+      "preferred_language": "Persian",
+      "last_seen_language": "Persian"
+    },
+    "6496963644": {
+      "relationship": "stranger",
+      "memory_summary": "",
+      "voice_reply": false,
+      "preferred_language": "Persian",
+      "last_seen_language": "Persian"
+    },
+    "1884631813": {
+      "relationship": "stranger",
+      "memory_summary": "",
+      "voice_reply": false,
+      "preferred_language": "Persian",
+      "last_seen_language": "Persian"
+    },
+    "6168977128": {
+      "relationship": "stranger",
+      "memory_summary": "",
+      "voice_reply": false,
+      "preferred_language": "Persian",
+      "last_seen_language": "Persian"
+    },
+    "1564563792": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,

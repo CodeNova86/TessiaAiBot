@@ -194,7 +194,35 @@ async def brain_loop(
 
         # If it's plain text, we're done
         if isinstance(result, str):
-            return result
+            # Check if the text response actually contains Python code blocks
+            # that should have been executed. If so, auto-extract and run.
+            if "```python" in result or "```py" in result:
+                import re as _re
+                code_match = _re.search(r"```(?:python|py)\s*\n(.*?)```", result, _re.DOTALL)
+                if code_match:
+                    extracted_code = code_match.group(1).strip()
+                    logger.info("Auto-extracted code from text response (%d chars)", len(extracted_code))
+                    # Execute the extracted code
+                    auto_result = await execute_tool_call(
+                        telethon_client, "run_python_code",
+                        {"code": extracted_code, "timeout": 30},
+                        event=event,
+                    )
+                    # Feed result back and let AI respond
+                    current_messages.append({"role": "user", "content": (
+                        f"I extracted Python code from your response and ran it.\n"
+                        f"Code:\n```\n{extracted_code[:500]}\n```\n"
+                        f"Result:\n{json.dumps(auto_result, ensure_ascii=False)[:1000]}\n"
+                        f"Now tell the user what happened in Persian."
+                    )})
+                    tool_calls_remaining -= 1
+                    if tool_calls_remaining <= 0:
+                        final = await brain_decide_action(
+                            current_messages, tools=None, tool_choice=TOOL_CHOICE_NONE,
+                        )
+                        return final if isinstance(final, str) else str(final)
+                    continue  # loop back
+            return result  # no code blocks, normal text
 
         # It's a list of tool calls — execute them
         tool_calls_remaining -= 1

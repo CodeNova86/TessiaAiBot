@@ -2087,78 +2087,106 @@ async def handle_text(message: Message, bot: Bot):
     if not await should_answer(message, bot):
         return
 
-    # ─── Telethon tool-request detection ──────────────────────────
-    # Only runs AFTER should_answer() — guarantees user said "تسیا ..." or replied to Tessia.
-    cleaned = clean_tessia_prefix(text)
-    TOOL_TRIGGERS = [
-        "بفرست", "send", "forward", "فوروارد", "پین", "pin",
-        "بن", "ban", "کیک", "kick", "اد", "add", "حذف کن", "delete",
-        "پیام بده", "بگو", "tell",
-        "اعضا", "members", "participants", "ممبرا",
-        "گروه بساز", "create group", "channel", "کانال بساز",
-        "profile", "پروفایل", "username", "یوزرنیم",
-        "بیو", "bio", "avatar",
-        "search", "سرچ", "find", "get dialogs", "dialogs",
-        "invite", "invite link", "لینک دعوت",
-        "انپین", "unpin", "edit", "ویرایش", "mark read",
-        "مشترک", "member", "عضو جدید",
-        "استیکر کن", "استیکر بساز", "make sticker",
-        "کد بده", "run code", "اجرا کن",
-    ]
-
-    wants_tool = any(trigger in cleaned.lower() for trigger in TOOL_TRIGGERS) if cleaned else False
-    is_tool_request = wants_tool and telethon_is_ready()
-
-    if is_tool_request:
+    # ─── UNIVERSAL BRAIN PATH ──────────────────────────────────────
+    # Every message that passes "تسیا" or reply-to-Tessia goes through
+    # the AI brain with all 31 tools available. The AI itself decides
+    # whether to use a tool or just reply with text.
+    if telethon_is_ready():
         tl_client = get_client()
         if tl_client and tl_client.is_connected():
             try:
-                thinking_msg = await message.reply("دارم از ابزارهای تلگرام استفاده می‌کنم... 🔧")
+                cleaned = clean_tessia_prefix(text)
+                thinking_msg = await message.reply("💭 صبر کن ببینم چی‌کار می‌تونم بکنم...")
+
                 from father_gateway import brain_loop
 
-                # Build system prompt that includes TOOL_SCHEMAS
+                # Build a rich system prompt so the AI understands the full picture
                 system_prompt = (
-                    "You are Tessia Eralith, an elven princess. You have access to the father's "
-                    "Telegram account through Telethon tools. The user is asking you to perform "
-                    "an action on Telegram. Decide which tool to use and execute it.\n\n"
-                    f"Current user ID on Tessia: {user_name} ({user_id})\n\n"
-                    "### Code Execution Tool\n"
-                    "If the user wants something that needs custom logic (e.g. convert an image "
-                    "to a sticker, download something, manipulate media, etc.), use the "
-                    "run_python_code tool. Write Python code that uses the 'client' variable "
-                    "(a Telethon TelegramClient) and prints the result. "
-                    "The code runs server-side with telethon, PIL (Pillow), requests, io, "
-                    "json, base64, os, tempfile, subprocess, and traceback available.\n\n"
-                    "### Available Telegram Tools\n"
-                    "You have all standard Telegram tools: send_message, forward_messages, "
-                    "get_entity, get_user_info, get_dialogs, get_messages, "
-                    "get_participants, ban/kick/add/leave, pin/unpin, mark_read, "
-                    "set_profile_photo, update_profile, export_invite, etc.\n"
-                    "Always respond in Persian unless the user speaks English.\n"
-                    "Keep replies concise."
+                    "You are Tessia Eralith, an elven princess — proud, sharp, and royal.\n\n"
+                    "You have access to the father's Telegram account via tools. "
+                    "You can do ANYTHING on Telegram: send messages to anyone, "
+                    "manage groups, read info, change profile, create stickers, etc.\n\n"
+                    f"Current user: {user_name} (ID: {user_id})\n"
+                    "The conversation is happening in Tessia Bot (aiogram), "
+                    "but you can perform actions through the father's Telethon account.\n\n"
+                    "### How to handle requests\n"
+                    "- If the user asks for info (profile, dialogs, members, etc.), "
+                    "use the appropriate query tool, then report the result in Persian.\n"
+                    "- If the user asks to DO something (send message, ban, add, etc.), "
+                    "use the tool to do it, then confirm.\n"
+                    "- If the user asks for something you can't do with tools (like "
+                    "\"چت کنیم\" or \"حالت چطوره\"), just reply naturally as Tessia.\n"
+                    "- If the user wants to change your father's account profile, "
+                    "use get_user_info, update_profile, set_profile_photo, etc.\n\n"
+                    "### Code Execution (run_python_code)\n"
+                    "CUSTOM operations: ALWAYS call the run_python_code tool.\n"
+                    "NEVER write Python code in a text reply — it won't execute.\n"
+                    "Save output files to OUTPUT_DIR.\n"
+                    "### Important Rules\n"
+                    "- ALWAYS respond in Persian unless the user writes in another language\n"
+                    "- Keep replies concise and in character as Tessia\n"
+                    "- If a tool returns a file or image path, mention it clearly\n"
+                    "- Do NOT say you sent something if you haven't actually sent it\n"
+                    "- If you need to send a file you downloaded, use send_photo or send_file\n"
+                    "  to send it to the user's chat via the father account"
                 )
                 brain_messages = [
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": f"کاربر می‌گه: {cleaned}\n\nاز ابزارها یا کد Python استفاده کن و نتیجه رو گزارش بده."},
+                    {"role": "user", "content": cleaned},
                 ]
 
                 result = await brain_loop(brain_messages, tl_client, max_rounds=5)
+
+                # After brain finishes, scan for any files the tools created
+                # and send them via the aiogram bot (not the father's Telethon)
+                sent_file = False
+                import glob
+                output_dir = "/tmp/tessia_output"
+                if os.path.isdir(output_dir):
+                    for fname in sorted(os.listdir(output_dir)):
+                        fpath = os.path.join(output_dir, fname)
+                        if not os.path.isfile(fpath):
+                            continue
+                        try:
+                            if fpath.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif')):
+                                await bot.send_photo(
+                                    chat_id=message.chat.id,
+                                    photo=FSInputFile(fpath),
+                                    reply_parameters={"message_id": message.message_id},
+                                )
+                            else:
+                                await bot.send_document(
+                                    chat_id=message.chat.id,
+                                    document=FSInputFile(fpath),
+                                    reply_parameters={"message_id": message.message_id},
+                                )
+                            sent_file = True
+                        except Exception as exc2:
+                            logger.warning("Failed to send output file %s: %s", fpath, exc2)
+                        finally:
+                            try:
+                                os.remove(fpath)
+                            except Exception:
+                                pass
+
                 try:
                     await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
                 except Exception:
                     pass
+
+                # If we already sent a file, don't send another text reply
+                # unless there's additional text content
+                if sent_file and len(result.strip()) < 50:
+                    return
+
                 await deliver_final_response(bot, message, result, reply_to=message.message_id)
                 return
             except Exception as e:
                 log_error("telethon_tool_request", e)
-                await safe_send_message(
-                    bot, message.chat.id,
-                    f"خطا در اجرای ابزار: {str(e)}",
-                    reply_to=message.message_id,
-                )
-                return
-    # ─── End of tool-request path ──────────────────────────────────
+                # Fall through to normal AI path on error
+                pass
 
+    # ─── NORMAL AI CHAT PATH (no Telethon client, or brain errored out) ─────────
     voice_toggle = check_auto_voice_toggle(user_id, text)
     if voice_toggle == "on":
         save_data()

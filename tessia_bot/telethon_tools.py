@@ -993,6 +993,7 @@ async def run_python_code(
         "random": __import__("random"),
         "traceback": tb_module,
         "logging": logging,
+        "OUTPUT_DIR": "/tmp/tessia_output",
     }
     try:
         from PIL import Image
