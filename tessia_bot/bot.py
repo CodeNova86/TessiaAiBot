@@ -1216,8 +1216,17 @@ def build_reply_context(message: Message):
         parts.append(f"روی فایل «{replied.document.file_name or 'unknown'}» ریپلای شده.")
     elif replied.photo:
         parts.append("روی یک عکس ریپلای شده.")
-    if parts:
-        parts.append("پاسخت را اول بر اساس همین پیام ریپلای‌شده تنظیم کن، نه حافظه قدیمی.")
+        # Add telethon-compatible info for AI to download the photo
+        parts.append(f"[REPLIED_PHOTO: chat_id={message.chat.id}, message_id={replied.message_id}]")
+    elif replied.sticker:
+        parts.append("روی یک استیکر ریپلای شده.")
+        parts.append(f"[REPLIED_STICKER: chat_id={message.chat.id}, message_id={replied.message_id}]")
+    elif replied.animation:
+        parts.append("روی یک GIF انیمیشن ریپلای شده.")
+        parts.append(f"[REPLIED_ANIMATION: chat_id={message.chat.id}, message_id={replied.message_id}]")
+    if replied_text:
+        parts.append(f"متن پیام ریپلای‌شده: {replied_text[:MAX_REPLY_CONTEXT_CHARS]}")
+    parts.append("پاسخت را اول بر اساس همین پیام ریپلای‌شده تنظیم کن.")
     return "\n".join(parts)
 
 
@@ -2134,10 +2143,16 @@ async def handle_text(message: Message, bot: Bot):
                     "- Keep replies concise and in character as Tessia.\n"
                     "- NEVER say you sent a file — the bot sends files from OUTPUT_DIR automatically.\n"
                     "- If a tool returns a file path, say 'فایل آماده است' and the bot delivers it.\n"
+                    "- If the user replied to a message, the replied message content is included above.\n"
+                    "  Use it for context when deciding what to do. For example, if they replied to\n"
+                    "  a photo and said 'استیکر کن', they want that photo converted to a sticker.\n"
+                    "  If you see [REPLIED_PHOTO: chat_id=..., message_id=...], you can download it\n"
+                    "  in run_python_code using: msg = await client.get_messages(chat_id, ids=message_id)\n"
+                    "  Then msg.download_media(file=OUTPUT_DIR + '/photo.jpg') to save it.\n"
                 )
                 brain_messages = [
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": cleaned},
+                    {"role": "user", "content": (cleaned + "\n\n" + build_reply_context(message)) if build_reply_context(message) else cleaned},
                 ]
 
                 result = await brain_loop(brain_messages, tl_client, max_rounds=5)
