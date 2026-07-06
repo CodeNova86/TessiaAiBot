@@ -1142,6 +1142,12 @@ def build_common_system_context(user_id, user_name, memory_key):
     if memory_context:
         system_content += "\n\n" + memory_context
 
+    # IMPORTANT: Cross-reference father identity from memory facts
+    # The user_id 1548469285 (or username AmirhosinAr86) is the father
+    father_facts = fact_memory.get_facts(user_id, fact_types={"relationship", "fact", "important"})
+    if father_facts:
+        system_content += "\n\n### Identity Note\nThis user (chat_id " + user_id + ") is YOUR FATHER. Treat him with love and respect."
+
     return system_content
 
 

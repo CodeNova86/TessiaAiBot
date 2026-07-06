@@ -1,22 +1,15 @@
 {
-  "memory": {
-    "-1001569565280:1548469285": [
-      {
-        "role": "user",
-        "content": "من کیم"
-      }
-    ]
-  },
+  "memory": {},
   "user_labels": {
     "8825026272": {
       "label": "",
-      "behavior": "من پدرتم‌مشتی"
+      "behavior": "من مگخ پدرت نیستم؟"
     }
   },
   "name_to_id": {
     "𝛵𝑟𝑢𝑡𝛨": "6185995646",
-    "arthuraw": "5983502524",
     "amir": "1548469285",
+    "arthuraw": "5983502524",
     "𝚃𝚎𝚜𝚜𝚒𝚊": "8825026272"
   },
   "reaction_media": {},
@@ -28,14 +21,14 @@
       "preferred_language": "Persian",
       "last_seen_language": "Persian"
     },
-    "5983502524": {
+    "1548469285": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,
       "preferred_language": "Persian",
       "last_seen_language": "Persian"
     },
-    "1548469285": {
+    "5983502524": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,

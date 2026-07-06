@@ -485,15 +485,15 @@ async def main():
 
     load_data()
     # Seed known father facts into long-term memory
-    from tessia_bot.config import FATHER_NAME, FATHER_USERNAME, GOD_FATHER_USERNAME
-    for uid in (FATHER_ID, FATHER_USER_ID):
+    from tessia_bot.config import FATHER_ID as CFG_FATHER_ID, FATHER_NAME, FATHER_USERNAME, GOD_FATHER_USERNAME
+    for uid in (CFG_FATHER_ID, CFG_FATHER_ID):
         fact_memory.add_fact(uid, "name", "اسمش آمیره", confidence=1.0)
         fact_memory.add_fact(uid, "fact", "پدر تسیا است", confidence=1.0)
         fact_memory.add_fact(uid, "important", "کاربر صاحب اکانته", confidence=1.0)
         fact_memory.add_fact(uid, "relationship", "پدر تسیا (صاحب ربات)", confidence=1.0)
     fact_memory.add_fact(GOD_FATHER_USERNAME.lower(), "name", "آمیر (AmirhosinAR86)", confidence=1.0)
     fact_memory.add_fact(GOD_FATHER_USERNAME.lower(), "relationship", "پدر تسیا", confidence=1.0)
-    logger.info("Seeded %d facts for father identity", len(FACT_TYPES))
+    logger.info("Seeded facts for father identity")
 
     client_user = TelegramClient(
         TELETHON_SESSION_NAME, int(TELETHON_API_ID), TELETHON_API_HASH,
