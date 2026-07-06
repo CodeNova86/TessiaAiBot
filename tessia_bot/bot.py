@@ -2116,10 +2116,23 @@ async def handle_text(message: Message, bot: Bot):
         return
 
     # ─── UNIVERSAL BRAIN PATH ──────────────────────────────────────
-    # Every message that passes "تسیا" or reply-to-Tessia goes through
-    # the AI brain with all 31 tools available. The AI itself decides
-    # whether to use a tool or just reply with text.
-    if telethon_is_ready():
+    # Only use the tool-enabled brain when a tool is clearly needed.
+    # Otherwise fall through to normal AI chat.
+    cleaned = clean_tessia_prefix(text)
+    tool_triggers = [
+        "بفرست", "ارسال", "send", "forward", "فوروارد", "پین", "pin",
+        "بن", "ban", "کیک", "kick", "اد", "add", "حذف", "delete",
+        "پیام بده", "بگو", "tell", "اعضا", "members", "participants", "ممبرا",
+        "گروه بساز", "create group", "channel", "کانال",
+        "profile", "پروفایل", "username", "یوزرنیم", "بیو", "bio", "avatar",
+        "search", "سرچ", "find", "get dialogs", "dialogs",
+        "invite", "لینک دعوت", "unpin", "انپین", "edit", "ویرایش", "mark read",
+        "استیکر", "کد بده", "run code", "اجرا کن", "دانلود", "download",
+        "ترجمه کن", "translate", "کیفیت", "بهبود",
+    ]
+    needs_tool = any(trigger in cleaned.lower() for trigger in tool_triggers) if cleaned else False
+
+    if needs_tool and telethon_is_ready():
         tl_client = get_client()
         if tl_client and tl_client.is_connected():
             try:
@@ -2167,28 +2180,22 @@ async def handle_text(message: Message, bot: Bot):
                     }
                 event_json = _json.dumps(event_data, ensure_ascii=False, indent=2)
 
-                # Build a richer system prompt
-                system_prompt = (
-                    "You are Tessia Eralith, an elven princess — proud, sharp, and royal.\n\n"
-                    "You have access to the father's Telegram account via tools.\n"
-                    "You can do ANYTHING on Telegram: send, ban, add, kick, get info, change profile, create stickers, etc.\n\n"
-                    f"Current user: {user_name} (ID: {user_id})\n\n"
-                    "### RULES\n"
-                    "- ALWAYS respond in Persian unless the user writes in another language.\n"
-                    "- Keep replies concise and in character as Tessia.\n"
-                    "- If the user wants info or actions, use the appropriate tool. If just chatting, reply naturally.\n"
-                    "- NEVER send messages to users on your own — only do what the user explicitly asks.\n"
-                    "- For kick/ban/add actions in a group, use the chat_id from event_json below.\n"
-                    "- NEVER write Python code in a text reply — always call run_python_code tool.\n"
-                    "- Save output files to OUTPUT_DIR (variable in run_python_code) — they auto-send to user.\n"
-                    "- NEVER say you sent a file — the bot delivers files from OUTPUT_DIR automatically.\n"
-                    "- The user's message that said 'تسیا ...' is already deleted.\n"
-                    "  Don't mention its deletion, just act on the request.\n"
-                    "- If the user replied to a message with media (photo/sticker/video), you can download it\n"
-                    "  in run_python_code via: msg = await client.get_messages(chat_id, ids=message_id)\n"
-                    "  then msg.download_media(file=...). Use the chat_id and message_id from reply_to in event_json.\n"
-                    "- If the user asks about this chat itself (members, info), use tools on the chat_id from event_json.\n"
-                )
+                # Build the system prompt using the existing character context + facts
+                system_prompt = build_common_system_context(user_id, user_name, memory_key)
+                system_prompt += "\n\n### Extended Capabilities\n"
+                system_prompt += "You also have access to the father's Telegram account via tools.\n"
+                system_prompt += "You can do ANYTHING on Telegram: send, ban, add, kick, get info, change profile, create stickers, etc.\n"
+                system_prompt += "### Tool Rules\n"
+                system_prompt += "- NEVER send messages to users on your own — only do what the user explicitly asks.\n"
+                system_prompt += "- NEVER write Python code in a text reply — always call run_python_code tool.\n"
+                system_prompt += "- Save output files to OUTPUT_DIR (variable in run_python_code) — they auto-send to user.\n"
+                system_prompt += "- NEVER say you sent a file — the bot delivers files from OUTPUT_DIR automatically.\n"
+                system_prompt += "- This chat is with Tessia Bot (aiogram). Reply HERE in this chat via a simple text response.\n"
+                system_prompt += "  Do NOT use send_message or reply_message tools — just return the text directly.\n"
+                system_prompt += "- If the user replied to a message with media (photo/sticker/video), you can download it\n"
+                system_prompt += "  in run_python_code via: msg = await client.get_messages(chat_id, ids=message_id)\n"
+                system_prompt += "  then msg.download_media(file=...). Use the chat_id and message_id from reply_to in event_json.\n"
+                system_prompt += "- If the user asks about this chat itself (members, info), use tools on the chat_id from event_json.\n"
                 brain_messages = [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": f"## User Request\n{cleaned}\n\n## Full Event JSON\n{event_json}\n\nDecide what to do and use tools if needed."},

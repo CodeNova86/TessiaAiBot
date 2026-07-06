@@ -1,34 +1,37 @@
 {
-  "memory": {},
+  "memory": {
+    "1548469285:1548469285": [
+      {
+        "role": "user",
+        "content": "تسیا چرا داری چرت میگی"
+      },
+      {
+        "role": "assistant",
+        "content": "بابا جونم من که هیچ چرتی نگفتم! 😅\n\nشاید یکم خسته‌ام امروز... یا شاید تو دیروقت پیام دادی و من هنوز بیدار نبودم کامل 💚"
+      },
+      {
+        "role": "user",
+        "content": "خب خوبه"
+      },
+      {
+        "role": "assistant",
+        "content": "*با نگاه پر از غرور و لبخندی شیطونتی*\n\nخب معلومه دیگه! من که همیشه درست و حسابی حرف می‌زنم، مگه نه؟ 😏\nفقط گاهی اوقات یه کم... *با لحن لوس* ...بابات لوس بازی درمیاره! 🌸\n\nحالا بگو ببینم، این دفعه چرا بهم گفتی چرت می‌گی؟ 😤"
+      }
+    ]
+  },
   "user_labels": {
     "8825026272": {
       "label": "",
-      "behavior": "من مگخ پدرت نیستم؟"
+      "behavior": "خب خوبه"
     }
   },
   "name_to_id": {
-    "𝛵𝑟𝑢𝑡𝛨": "6185995646",
     "amir": "1548469285",
-    "arthuraw": "5983502524",
     "𝚃𝚎𝚜𝚜𝚒𝚊": "8825026272"
   },
   "reaction_media": {},
   "user_profiles": {
-    "6185995646": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
     "1548469285": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "5983502524": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,

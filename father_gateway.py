@@ -360,10 +360,22 @@ async def handle_new_message(event, client_user):
         raw_lower = raw_text.lower()
         is_self_command = bool(event.out and raw_lower.startswith("تسیا"))
 
-        # In private chats, only respond to trigger words or self-commands
+        # In private chats:
+        # - Self-commands (outgoing "تسیا ...") → always process
+        # - Whitelisted incoming messages → always process (natural chat)
+        # - Non-whitelisted → ignore
+        # No trigger word required for whitelisted contacts in DM.
         if not is_self_command:
-            triggers = ["تسیا", "@admin", "admin", "father", "پدر"]
-            if not any(raw_lower.startswith(t) for t in triggers):
+            sender = await event.get_sender()
+            if sender is None or getattr(sender, "bot", False):
+                return
+            sid = str(getattr(sender, "id", ""))
+            suname = (getattr(sender, "username", "") or "").lower()
+            whitelist_check = load_father_whitelist()
+            allowed_ids = set(whitelist_check.get("allowed_user_ids", []))
+            allowed_us = set(u.lower() for u in whitelist_check.get("allowed_usernames", []))
+            if sid not in allowed_ids and suname not in allowed_us:
+                logger.info("Ignored DM from non-whitelisted sender_id=%s username=%s", sid, suname)
                 return
         
         sender = await event.get_sender()
@@ -421,8 +433,8 @@ async def handle_new_message(event, client_user):
         learn_message(
             target_username or target_id,
             text=text,
-            sticker=msg.sticker if msg else None,
-            gif=msg.animation if msg else None,
+            sticker=getattr(msg, 'sticker', None),
+            gif=getattr(msg, 'animation', None),
         )
 
         # Build conversation messages
