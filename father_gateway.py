@@ -347,25 +347,28 @@ async def handle_new_message(event, client_user):
         if not is_gateway_runtime_enabled():
             return
         
+        me = await client_user.get_me()
+        raw_text = (event.raw_text or "").strip()
+        raw_lower = raw_text.lower()
+        is_self_command = bool(event.out and raw_lower.startswith("تسیا"))
+
         # Allow private chats (with trigger word) AND group messages
         is_group = False
         if event.is_private:
-            # In private chats (father's DMs), only respond if message starts with trigger
-            raw_text = (event.raw_text or "").strip().lower()
+            # In private chats (father's DMs), respond only to:
+            # - our own outgoing commands starting with "تسیا"
+            # - whitelisted incoming commands starting with trigger words
             triggers = ["تسیا", "@admin", "admin", "father", "پدر"]
-            if not any(raw_text.startswith(t) for t in triggers):
+            if not any(raw_lower.startswith(t) for t in triggers):
                 return
         else:
             # In groups, only respond if the message contains a trigger keyword
-            # (e.g., "@admin", "father", or the father's username)
-            raw_text = (event.raw_text or "").strip().lower()
-            me = await client_user.get_me()
             my_username = (getattr(me, "username", "") or "").lower()
             triggers = ["@admin", "admin", "father", "پدر"]
             if my_username:
                 triggers.append(f"@{my_username}")
                 triggers.append(my_username)
-            if not any(t in raw_text for t in triggers):
+            if not any(t in raw_lower for t in triggers):
                 return
             is_group = True
         
@@ -378,41 +381,51 @@ async def handle_new_message(event, client_user):
         sender_name = (
             getattr(sender, "first_name", "") or username or sender_id
         ).strip()
+
+        # In a self-issued DM command, the target person is the chat peer, not the sender (who is us)
+        target_entity = sender
+        if is_self_command and event.is_private:
+            try:
+                target_entity = await event.get_chat()
+            except Exception:
+                target_entity = sender
+        target_id = str(getattr(target_entity, "id", sender.id))
+        target_username = getattr(target_entity, "username", "") or ""
+        target_name = (
+            getattr(target_entity, "first_name", "") or target_username or target_id
+        ).strip()
+
         whitelist = load_father_whitelist()
-        if not is_sender_allowed(sender_id, username, whitelist):
+        if not is_self_command and not is_sender_allowed(sender_id, username, whitelist):
             logger.info(
-                "Ignored private message from non-whitelisted sender_id=%s username=%s",
+                "Ignored private/group message from non-whitelisted sender_id=%s username=%s",
                 sender_id,
                 username,
             )
             return
 
-        text = (event.raw_text or "").strip()
+        text = raw_text
         if not text:
             return
 
-        rate_limited_for = is_rate_limited(sender_id)
+        rate_limited_for = is_rate_limited(target_id)
         if rate_limited_for:
-            logger.info("Rate limited sender_id=%s for %ss", sender_id, rate_limited_for)
+            logger.info("Rate limited target_id=%s for %ss", target_id, rate_limited_for)
             return
 
-        me = await client_user.get_me()
-        if event.out or (
-            event.message
-            and getattr(event.message, "from_id", None)
-            == getattr(me, "id", None)
-        ):
+        # Ignore our own messages unless it's an explicit self-command starting with the trigger
+        if (event.out or (event.message and getattr(event.message, "from_id", None) == getattr(me, "id", None))) and not is_self_command:
             return
 
         # Update metadata
-        update_name_mapping(sender_id, sender_name)
-        update_user_language(sender_id, text)
-        persona_note = get_persona_note(username or sender_id)
+        update_name_mapping(target_id, target_name)
+        update_user_language(target_id, text)
+        persona_note = get_persona_note(target_username or target_id)
 
-        # Learn from incoming message (stickers, GIFs, text)
+        # Learn from incoming message (stickers, GIFs, text) for the target contact
         msg = event.message
         learn_message(
-            username or sender_id,
+            target_username or target_id,
             text=text,
             sticker=msg.sticker if msg else None,
             gif=msg.animation if msg else None,
@@ -481,7 +494,7 @@ async def main():
         len(startup_whitelist.get("allowed_usernames", [])),
     )
 
-    @client_user.on(events.NewMessage(incoming=True))
+    @client_user.on(events.NewMessage)
     async def event_handler(event):
         await handle_new_message(event, client_user)
 
