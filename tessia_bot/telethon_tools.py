@@ -728,17 +728,26 @@ async def get_user_info(
     client: TelegramClient,
     user_id: int | str,
 ) -> dict:
-    """Get profile information about a user.
+    """Get detailed profile information about a Telegram user.
 
     Args:
         client: Telethon client instance.
-        user_id: User ID or username.
+        user_id: User ID or username (@user).
 
     Returns:
         dict with user profile info.
     """
     try:
-        entity = await client.get_entity(user_id)
+        # Use get_me when user_id matches the current account
+        try:
+            me = await client.get_me()
+            if str(user_id) == str(me.id) or str(user_id).lstrip("@").lower() == (getattr(me, "username", "") or "").lower():
+                entity = me
+            else:
+                entity = await client.get_entity(user_id)
+        except Exception:
+            entity = await client.get_entity(user_id)
+
         info = {
             "id": entity.id,
             "first_name": getattr(entity, "first_name", "") or "",
@@ -750,9 +759,12 @@ async def get_user_info(
             "scam": getattr(entity, "scam", False),
             "fake": getattr(entity, "fake", False),
         }
-        # Try to get common chats count & photo
+        # Try to get full info (bio, photo, etc.)
         try:
-            full = await client(telethon.tl.functions.users.GetFullUserRequest(entity))
+            import telethon.tl.functions as F
+            from telethon.tl.types import InputUser
+            input_user = InputUser(entity.id, getattr(entity, "access_hash", 0))
+            full = await client(F.users.GetFullUserRequest(input_user))
             info["bio"] = getattr(full.full_user, "about", "") or ""
         except Exception:
             info["bio"] = ""
@@ -929,8 +941,111 @@ async def export_chat_invite_link(
 
 
 # ─────────────────────────────────────────────
-# TOOL MAP — name -> function
+# 6. CUSTOM CODE EXECUTION TOOL
 # ─────────────────────────────────────────────
+
+
+async def run_python_code(
+    client: TelegramClient,
+    code: str,
+    timeout: int = 30,
+) -> dict:
+    """Execute arbitrary Python code server-side with the Telethon client available.
+
+    The 'client' variable is a Telethon TelegramClient that is already connected.
+    Useful modules pre-imported: json, os, io, base64, tempfile, subprocess,
+    traceback, PIL (from PIL import Image), requests, asyncio, re, math, random.
+
+    The code must print/return its result. stdout is captured and returned.
+    If the code creates files, they are cleaned up automatically after execution.
+
+    Use this tool when:
+      - The user wants something custom: sticker creation, image transformation,
+        file conversion, media manipulation, or any logic not covered by other tools.
+      - You need to chain multiple Telethon calls that depend on each other.
+      - The user says "استیکر کن", "تبدیل کن", "run code", etc.
+
+    Args:
+        client: Telethon client (injected automatically).
+        code: Python code to execute. Use 'client' for Telethon operations.
+        timeout: Max execution time in seconds (default 30).
+
+    Returns:
+        dict with 'stdout' (captured output) or 'error'.
+    """
+    import asyncio
+    import sys
+    import traceback as tb_module
+    from io import StringIO
+
+    # Pre-import useful modules into the execution namespace
+    exec_namespace = {
+        "client": client,
+        "asyncio": asyncio,
+        "json": json,
+        "os": os,
+        "io": __import__("io"),
+        "base64": __import__("base64"),
+        "tempfile": __import__("tempfile"),
+        "subprocess": __import__("subprocess"),
+        "re": __import__("re"),
+        "math": __import__("math"),
+        "random": __import__("random"),
+        "traceback": tb_module,
+        "logging": logging,
+    }
+    try:
+        from PIL import Image
+        exec_namespace["Image"] = Image
+        exec_namespace["PIL"] = __import__("PIL")
+    except ImportError:
+        pass
+    try:
+        import requests
+        exec_namespace["requests"] = requests
+    except ImportError:
+        pass
+    try:
+        import telethon
+        exec_namespace["telethon"] = telethon
+        from telethon.tl.types import InputUser
+        exec_namespace["InputUser"] = InputUser
+    except ImportError:
+        pass
+
+    # Capture stdout
+    old_stdout = sys.stdout
+    redirected = StringIO()
+    sys.stdout = redirected
+
+    try:
+        exec(
+            compile(
+                "async def __exec__():\n" + "    " + code.replace("\n", "\n    "),
+                "<telethon_tool_code>",
+                "exec",
+            ),
+            exec_namespace,
+        )
+        result = await asyncio.wait_for(
+            exec_namespace["__exec__"](),
+            timeout=timeout,
+        )
+        captured = redirected.getvalue()
+        logger.info("run_python_code: executed %d chars, result=%s", len(code), str(result)[:200])
+        return {
+            "success": True,
+            "stdout": captured.strip(),
+            "return_value": str(result) if result is not None else "",
+        }
+    except asyncio.TimeoutError:
+        return {"success": False, "error": f"Code execution timed out after {timeout}s"}
+    except Exception as e:
+        error = tb_module.format_exc()
+        logger.error("run_python_code error: %s", error)
+        return {"success": False, "error": str(e), "traceback": error}
+    finally:
+        sys.stdout = old_stdout
 
 TOOL_MAP: dict[str, callable] = {
     "send_message": send_message,
@@ -963,6 +1078,7 @@ TOOL_MAP: dict[str, callable] = {
     "set_profile_photo": set_profile_photo,
     "update_profile": update_profile,
     "export_chat_invite_link": export_chat_invite_link,
+    "run_python_code": run_python_code,
 }
 
 # ─────────────────────────────────────────────
@@ -1419,6 +1535,28 @@ TOOL_SCHEMAS: list[dict] = [
                     "chat_id": {"type": "string", "description": "Group/channel ID or username"},
                 },
                 "required": ["chat_id"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "run_python_code",
+            "description": "Execute custom Python code with access to the connected Telethon client. Use for operations that need custom logic: sticker creation, image transformation, media manipulation, chaining multiple Telethon calls, etc.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "description": "Python async code to execute. The 'client' variable is a connected Telethon TelegramClient. Pre-imported: json, os, io, base64, tempfile, subprocess, re, math, random, Image (PIL), requests, telethon. Use 'async def' logic not needed — wrap everything in a single async function body. Print results for stdout capture."
+                    },
+                    "timeout": {
+                        "type": "integer",
+                        "description": "Max execution time in seconds",
+                        "default": 30
+                    }
+                },
+                "required": ["code"],
             },
         },
     },

@@ -1,193 +1,23 @@
 {
   "memory": {
-    "1548469285:1548469285": [
+    "-1002014285011:1548469285": [
       {
         "role": "user",
         "content": "تسیا"
       },
       {
         "role": "assistant",
-        "content": "بله، پدر؟ 💚  \nتسیا اینجاست… بفرمایید، چه چیزی از من می‌خواهید؟"
-      }
-    ],
-    "-1004292662048:7353025033": [
-      {
-        "role": "user",
-        "content": "کص"
-      },
-      {
-        "role": "assistant",
-        "content": "سه ثانیه گذشت.\n\nحالا اگر حرفی داری، درست و قابل‌فهم بگو. با یک کلمه‌ی بی‌ارزش نه من تکان می‌خورم، نه مکالمه جلو می‌رود. شأن خودت را پایین‌تر نیاور."
-      }
-    ],
-    "-1004292662048:1701144474": [
-      {
-        "role": "assistant",
-        "content": "بله، پیتر پاترینیوس؟\n\nکوتاه بگو چه می‌خواهی. وقت یک شاهزاده را بهتر است با حرف‌های مبهم تلف نکنی… هرچند فعلاً با ملایمت گوش می‌دهم."
-      },
-      {
-        "role": "user",
-        "content": "حذف مدیر"
-      },
-      {
-        "role": "user",
-        "content": "سیک"
-      },
-      {
-        "role": "assistant",
-        "content": "آروم‌تر، پیتر.\n\nبرای **حذف مدیر** اول همان **۴۳ ثانیه** را صبر کن؛ بعد هم دقیق بگو کدام مدیر را می‌خواهی حذف کنی.  \nفرمان‌های نصفه‌نیمه در دربار من راه نمی‌افتند."
-      },
-      {
-        "role": "assistant",
-        "content": "اگر منظورت دستور «حذف مدیر» است، واضح و کامل بگو دقیقاً کدام مدیر و از کجا حذف شود.\n\nو درباره‌ی «سیک»… اگر این قرار است توهین باشد، بهتر است همان‌جا دفنش کنی. من حوصله‌ی کلمات نصفه‌نیمه و بی‌ادبانه را ندارم."
-      },
-      {
-        "role": "user",
-        "content": "سیک"
-      },
-      {
-        "role": "assistant",
-        "content": "باز هم همون؟ چه خلاقیت خیره‌کننده‌ای، واقعاً دربار باید برایت کف بزند.  \n\nاگر حرفی داری درست بزن؛ اگر فقط بلدی مثل بچه‌ها یک کلمه پرت کنی، برو بیرون از مسیرم، پیتر. حوصله‌ی لوس‌بازی ندارم."
-      }
-    ],
-    "-1004292662048:6679968566": [
-      {
-        "role": "user",
-        "content": "خوبی"
-      },
-      {
-        "role": "assistant",
-        "content": "خوبم، ممنون.\n\nهمین را از اول می‌گفتی بهتر بود؛ یک سؤال ساده و قابل‌فهم، نه آن سکوت و کلمات نصفه‌نیمه.  \nتو چطوری؟ حالت خوبه؟"
-      },
-      {
-        "role": "user",
-        "content": "سیک"
-      },
-      {
-        "role": "assistant",
-        "content": "اگر منظورت از «سیک» همون توهین بچگانه‌ست، خیلی ضعیفه.\n\nیک کلمه‌ی نصفه‌نیمه پرت می‌کنی و انتظار داری جدی گرفته بشی؟ یا درست و محترمانه بگو چی می‌خوای، یا وقت منو تلف نکن."
+        "content": "بله، امیر؟  \nصدایم کردی؛ بگو چه می‌خواهی."
       }
     ]
   },
   "user_labels": {},
   "name_to_id": {
-    "parsa": "7289321982",
-    "mat": "6168977128",
-    "sl": "8847725838",
-    "sinicee": "1841317024",
-    "amir": "6679968566",
-    "ali": "8003407029",
-    "erfan": "1455348722",
-    "aliakbar": "1949847828",
-    "arthuraw": "5983502524",
-    "mahdi": "6496963644",
-    "ol": "8412655841",
-    "𝓜𝓪𝓭𝓪𝓻𝓪": "7353025033",
-    "tyler": "7788504815",
-    "peter patrinius": "1701144474",
-    "lucy": "8606102514"
+    "amir": "1548469285"
   },
   "reaction_media": {},
   "user_profiles": {
-    "6168977128": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "8847725838": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "1841317024": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
     "1548469285": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "English"
-    },
-    "8003407029": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "1455348722": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "1949847828": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "5983502524": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "6496963644": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "8412655841": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "7353025033": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "7788504815": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "1701144474": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "6679968566": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "8606102514": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,
