@@ -93,6 +93,7 @@ from tessia_bot.state import (
     user_labels,
     user_profiles,
 )
+from tessia_bot.memory_facts import fact_memory
 from tessia_bot.telethon_client_manager import get_client, is_ready as telethon_is_ready
 from tessia_bot.telethon_tools import TOOL_SCHEMAS, execute_tool_call
 from tessia_bot.father_learning import get_learning_summary

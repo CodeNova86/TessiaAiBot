@@ -22,6 +22,24 @@ FATHER_LEARNING_FILE = "father_learning.json"
 FACT_MEMORY_FILE = "memory_facts.json"
 LOG_FILE = "tessia_bot.log"
 FATHER_ID = "1548469285"
+
+# Seed known identities on import
+_seeded = False
+def ensure_facts_seeded():
+    global _seeded
+    if _seeded:
+        return
+    _seeded = True
+    from tessia_bot.memory_facts import fact_memory
+    for uid in (FATHER_ID, "1548469285"):
+        fact_memory.add_fact(uid, "name", "اسمش آمیره", confidence=1.0)
+        fact_memory.add_fact(uid, "fact", "پدر تسیا است", confidence=1.0)
+        fact_memory.add_fact(uid, "important", "کاربر صاحب اکانته", confidence=1.0)
+        fact_memory.add_fact(uid, "relationship", "پدر تسیا (صاحب ربات)", confidence=1.0)
+    fact_memory.add_fact("amirhosinar86", "name", "آمیر (AmirhosinAR86)", confidence=1.0)
+    fact_memory.add_fact("amirhosinar86", "relationship", "پدر تسیا", confidence=1.0)
+
+ensure_facts_seeded()
 MAX_CONCURRENT = 5
 MAX_IMG_PX = 2000
 SUMMARY_TRIGGER_MESSAGES = 12
@@ -38,6 +56,12 @@ FATHER_AUTO_REPLY_ENABLED = os.getenv("FATHER_AUTO_REPLY_ENABLED", "true").strip
 TELETHON_API_ID = 24781074
 TELETHON_API_HASH = "15f8e891f97681f4deeb690d0e4116b3"
 TELETHON_SESSION_NAME = os.getenv("TELETHON_SESSION_NAME", "father_session").strip() or "father_session"
+
+# Known identities for fact seeding
+FATHER_USER_ID = "1548469285"
+FATHER_NAME = "Amir"
+FATHER_USERNAME = "AmirhosinAR86"
+GOD_FATHER_USERNAME = "AmirhosinAr86"
 
 CLEAN_MANHWA_PROMPT = (
     "Manhwa text cleaning task. Remove only the text, letters, words, sound text, and dialogue "
