@@ -94,6 +94,7 @@ from tessia_bot.state import (
 )
 from tessia_bot.telethon_client_manager import get_client, is_ready as telethon_is_ready
 from tessia_bot.telethon_tools import TOOL_SCHEMAS, execute_tool_call
+from tessia_bot.father_learning import get_learning_summary
 
 # =========================
 # CONFIG
@@ -190,6 +191,7 @@ def build_panel_keyboard():
 
 def render_father_panel_text():
     status = get_father_runtime_status()
+    learning = get_learning_summary()
     return (
         "پنل کنترل اکانت پدر\n\n"
         f"gateway env: {'on' if status['gateway_env_enabled'] else 'off'}\n"
@@ -198,6 +200,9 @@ def render_father_panel_text():
         f"allowed ids: {status['allowed_user_ids_count']}\n"
         f"allowed usernames: {status['allowed_usernames_count']}\n\n"
         f"persona entries: {status['persona_entries_count']}\n\n"
+        f"🧠 Learning: {learning['total_contacts_learned']} contacts, "
+        f"{learning['total_messages_tracked']} msgs tracked\n"
+        f"(stickers, GIFs, catchphrases)\n\n"
         "برای افزودن/حذف مستقیم بفرست:\n"
         "- افزودن @username\n"
         "- افزودن 123456789\n"

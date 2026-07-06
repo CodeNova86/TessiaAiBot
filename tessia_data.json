@@ -1,33 +1,37 @@
 {
-  "memory": {},
+  "memory": {
+    "-1002014285011:1548469285": [
+      {
+        "role": "user",
+        "content": "[gif فرستاد: کاربر یک gif فرستاده.\nمتن همراه: این GIF رو فرستاده.\nبه خودِ حرکت یا منظور ضمنی‌اش جواب بده، نه به محتوای بصری رسانه.]"
+      },
+      {
+        "role": "assistant",
+        "content": "باشه پدر جان، پیامش رو گرفتم.  \nچه واکنش پرمعنایی هم فرستاده بودی... انگار حرفت رو بی‌صدا ولی کامل زدی 💚"
+      }
+    ]
+  },
   "user_labels": {
     "7908720352": {
       "label": "",
-      "behavior": "کیکش کن از گروه"
+      "behavior": "بنش کن"
     }
   },
   "name_to_id": {
-    "mat": "6168977128",
-    "amir": "1548469285",
-    "elmira": "7908720352"
+    "mahdi": "6496963644",
+    "elmira": "7908720352",
+    "amir": "1548469285"
   },
   "reaction_media": {},
   "user_profiles": {
-    "6168977128": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "English"
-    },
-    "1548469285": {
+    "7908720352": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,
       "preferred_language": "Persian",
       "last_seen_language": "Persian"
     },
-    "7908720352": {
+    "1548469285": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,

@@ -43,6 +43,7 @@ from tessia_bot.state import (
 )
 from tessia_bot.telethon_client_manager import set_client
 from tessia_bot.telethon_tools import TOOL_SCHEMAS, TOOL_MAP, execute_tool_call
+from tessia_bot.father_learning import learn_message, learn_our_reply, get_learning_context
 
 logger = get_logger("father_gateway")
 
@@ -284,25 +285,53 @@ async def build_recent_chat_messages(
     incoming_text: str,
     persona_note: str = "",
 ) -> list[dict]:
-    """Build conversation history for the AI context.
-
-    Same as before but properly injects the incoming message.
-    """
+    """Build conversation history for the AI context (last 20 msgs)."""
     me = await client_user.get_me()
     history_items = []
-    async for msg in client_user.iter_messages(event.chat_id, limit=50):
-        text = (getattr(msg, "raw_text", None) or "").strip()
-        if not text:
-            continue
+    async for msg in client_user.iter_messages(event.chat_id, limit=20):
+        # Get text or caption
+        text = (getattr(msg, "raw_text", None) or getattr(msg, "text", None) or "").strip()
+
         sender_id = getattr(msg, "sender_id", None)
-        role = "assistant" if sender_id == me.id else "user"
-        history_items.append({"role": role, "content": text[:1500]})
+        is_me = sender_id == me.id
+
+        # Build a rich representation
+        parts = []
+        if text:
+            parts.append(text[:1500])
+        if msg.sticker:
+            emoji = msg.sticker.emoji or ""
+            parts.append(f"[sticker: {emoji}]")
+        if msg.animation:  # GIF
+            parts.append("[GIF]")
+        if msg.photo:
+            parts.append("[photo]")
+        if msg.voice:
+            parts.append("[voice]")
+        if msg.video:
+            parts.append("[video]")
+        if msg.document:
+            parts.append(f"[file: {msg.document.file_name or 'unknown'}]")
+
+        content = " ".join(parts).strip()
+        if not content:
+            continue
+
+        role = "assistant" if is_me else "user"
+        history_items.append({"role": role, "content": content})
     history_items.reverse()
     history_items.append({"role": "user", "content": incoming_text[:1500]})
 
     system_prompt = FATHER_DM_SYSTEM_PROMPT
     if persona_note:
         system_prompt += f"\n\nPersona note for this contact:\n{persona_note[:1200]}"
+
+    # Inject learning context
+    contact_id = str(getattr(event, "sender_id", ""))
+    learning_context = get_learning_context(contact_id)
+    if learning_context:
+        system_prompt += f"\n\nLearned patterns about this contact:\n{learning_context}"
+        system_prompt += "\n\nUse these patterns to match their vibe. If they often send a certain sticker, feel free to send it back. If they use certain phrases, mirror their tone."
 
     return [{"role": "system", "content": system_prompt}] + history_items
 
@@ -358,6 +387,15 @@ async def handle_new_message(event, client_user):
         update_name_mapping(sender_id, sender_name)
         update_user_language(sender_id, text)
         persona_note = get_persona_note(username or sender_id)
+
+        # Learn from incoming message (stickers, GIFs, text)
+        msg = event.message
+        learn_message(
+            username or sender_id,
+            text=text,
+            sticker=msg.sticker if msg else None,
+            gif=msg.animation if msg else None,
+        )
 
         # Build conversation messages
         messages = await build_recent_chat_messages(

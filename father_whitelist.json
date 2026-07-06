@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "allowed_user_ids": [
     "123456789",
     "5983502524"
@@ -10,6 +10,8 @@
     "thefool_arthur",
     "amirhosinahhsv",
     "به وایت لیست @g0lda3e",
-    "g0lda3e"
+    "g0lda3e",
+    "khorshid_kochoulo",
+    "elmira87sa"
   ]
 }
