@@ -30,9 +30,38 @@ from telethon.errors import (
     UsernameNotOccupiedError,
 )
 from telethon.tl.functions.messages import AddChatUserRequest, EditChatTitleRequest
-from telethon.tl.types import InputPeerEmpty
+from telethon.tl.types import InputPeerChannel, InputPeerChat, InputPeerEmpty, PeerChannel, PeerChat
 
 logger = logging.getLogger("tessia.telethon_tools")
+
+
+# Helper: try to resolve a chat_id that may be a channel/group peer
+async def _resolve_entity(client: TelegramClient, chat_id: str | int):
+    """Try multiple strategies to resolve a chat_id to an entity."""
+    try:
+        return await client.get_input_entity(chat_id)
+    except (ValueError, Exception):
+        pass
+    # For supergroups/channels, chat IDs are often -100xxxxxx
+    # Telethon needs the positive version or the full PeerChannel
+    if isinstance(chat_id, int):
+        # Try both raw and with PeerChannel
+        try:
+            return await client.get_input_entity(PeerChannel(chat_id))
+        except Exception:
+            pass
+        # For channels, sometimes the negative ID works with the positive
+        if str(chat_id).startswith("-100"):
+            try:
+                return await client.get_input_entity(PeerChannel(int(str(chat_id)[4:])))
+            except Exception:
+                pass
+        elif chat_id < 0:
+            try:
+                return await client.get_input_entity(PeerChat(chat_id))
+            except Exception:
+                pass
+    raise ValueError(f"Cannot find any entity corresponding to \"{chat_id}\"")
 
 # ─────────────────────────────────────────────
 # 1. MESSAGE TOOLS
@@ -57,7 +86,7 @@ async def send_message(
         dict with 'message_id' and 'chat_id' on success.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         msg = await client.send_message(entity, text, parse_mode=parse_mode or None)
         logger.info("send_message: chat_id=%s msg_id=%s", chat_id, msg.id)
         return {"success": True, "message_id": msg.id, "chat_id": str(msg.chat_id)}
@@ -307,7 +336,7 @@ async def download_media(
         dict with 'file_path' on success.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         msg = await client.get_messages(entity, ids=message_id)
         if not msg or not msg.media:
             return {"success": False, "error": "No media found in message"}
@@ -341,7 +370,7 @@ async def get_participants(
         dict with 'participants' list and 'count'.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         participants = await client.get_participants(entity, limit=limit)
         result = []
         for p in participants:
@@ -377,7 +406,7 @@ async def kick_participant(
         dict on success.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         user = await client.get_input_entity(user_id)
         await client.kick_participant(entity, user)
         logger.info("kick_participant: chat_id=%s user_id=%s", chat_id, user_id)
@@ -405,7 +434,7 @@ async def ban_participant(
         dict on success.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         user = await client.get_input_entity(user_id)
         await client.edit_permissions(entity, user, view_messages=False)
         logger.info("ban_participant: chat_id=%s user_id=%s", chat_id, user_id)
@@ -433,7 +462,7 @@ async def unban_participant(
         dict on success.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         user = await client.get_input_entity(user_id)
         await client.edit_permissions(entity, user, view_messages=True)
         logger.info("unban_participant: chat_id=%s user_id=%s", chat_id, user_id)
@@ -459,7 +488,7 @@ async def add_participant(
         dict on success.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         user_entity = await client.get_input_entity(user_id)
         await client(AddChatUserRequest(entity, user_entity, fwd_limit=5))
         logger.info("add_participant: chat_id=%s user_id=%s", chat_id, user_id)
@@ -483,7 +512,7 @@ async def leave_chat(
         dict on success.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         await client.delete_dialog(entity)
         logger.info("leave_chat: chat_id=%s", chat_id)
         return {"success": True}
@@ -638,7 +667,7 @@ async def get_messages(
         dict with 'messages' list.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         msgs = await client.get_messages(entity, limit=limit)
         result = []
         for m in msgs:
@@ -672,7 +701,7 @@ async def get_message_by_id(
         dict with message data.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         msg = await client.get_messages(entity, ids=message_id)
         if not msg:
             return {"success": False, "error": "Message not found"}
@@ -707,7 +736,7 @@ async def search_messages(
         dict with 'messages' list.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         msgs = await client.get_messages(entity, search=query, limit=limit)
         result = []
         for m in msgs:
@@ -796,7 +825,7 @@ async def pin_message(
         dict on success.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         await client.pin_message(entity, message_id)
         logger.info("pin_message: chat_id=%s msg_id=%s", chat_id, message_id)
         return {"success": True}
@@ -821,7 +850,7 @@ async def unpin_message(
         dict on success.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         await client.unpin_message(entity)
         logger.info("unpin_message: chat_id=%s", chat_id)
         return {"success": True}
@@ -844,7 +873,7 @@ async def mark_read(
         dict on success.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         await client.send_read_acknowledge(entity)
         logger.info("mark_read: chat_id=%s", chat_id)
         return {"success": True}
@@ -929,7 +958,7 @@ async def export_chat_invite_link(
         dict with 'invite_link' on success.
     """
     try:
-        entity = await client.get_input_entity(chat_id)
+        entity = await _resolve_entity(client, chat_id)
         link = await client.export_chat_invite(entity)
         logger.info("export_chat_invite: chat_id=%s link=%s", chat_id, link)
         return {"success": True, "invite_link": link}
@@ -1593,6 +1622,13 @@ async def execute_tool_call(
     tool_fn = TOOL_MAP.get(tool_name)
     if not tool_fn:
         return {"success": False, "error": f"Unknown tool: {tool_name}"}
+
+    # Convert string numeric chat_id to int if possible (Telethon needs int for entity lookup)
+    for key in ("chat_id", "user_id", "to_chat", "from_chat"):
+        if key in arguments and isinstance(arguments[key], str):
+            val = arguments[key].strip()
+            if val.lstrip("-").isdigit():
+                arguments[key] = int(val)
 
     # Inject event for reply_message
     if tool_name == "reply_message" and event is not None:

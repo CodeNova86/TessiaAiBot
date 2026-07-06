@@ -2104,55 +2104,73 @@ async def handle_text(message: Message, bot: Bot):
         tl_client = get_client()
         if tl_client and tl_client.is_connected():
             try:
+                import json as _json
                 cleaned = clean_tessia_prefix(text)
                 thinking_msg = await message.reply("💭 صبر کن ببینم چی‌کار می‌تونم بکنم...")
 
                 from father_gateway import brain_loop
 
-                # Build a rich system prompt so the AI understands the full picture
+                # Build full event JSON for the AI
+                event_data = {
+                    "text": cleaned,
+                    "raw_text": text,
+                    "chat": {
+                        "id": message.chat.id,
+                        "type": message.chat.type,
+                        "title": getattr(message.chat, "title", None),
+                        "username": getattr(message.chat, "username", None),
+                    },
+                    "sender": {
+                        "id": message.from_user.id,
+                        "first_name": getattr(message.from_user, "first_name", None),
+                        "last_name": getattr(message.from_user, "last_name", None),
+                        "username": getattr(message.from_user, "username", None),
+                        "language_code": getattr(message.from_user, "language_code", None),
+                    },
+                    "is_reply": message.reply_to_message is not None,
+                }
+                if message.reply_to_message:
+                    r = message.reply_to_message
+                    event_data["reply_to"] = {
+                        "message_id": r.message_id,
+                        "sender_id": r.from_user.id if r.from_user else None,
+                        "sender_name": r.from_user.first_name if r.from_user else None,
+                        "text": (r.text or r.caption or "")[:2000],
+                        "has_photo": r.photo is not None,
+                        "has_document": r.document is not None,
+                        "has_sticker": r.sticker is not None,
+                        "has_animation": r.animation is not None,
+                        "has_voice": r.voice is not None,
+                        "has_video": r.video is not None,
+                        "document_name": r.document.file_name if r.document else None,
+                        "document_mime": r.document.mime_type if r.document else None,
+                        "sticker_emoji": r.sticker.emoji if r.sticker else None,
+                    }
+                event_json = _json.dumps(event_data, ensure_ascii=False, indent=2)
+
+                # Build a richer system prompt
                 system_prompt = (
                     "You are Tessia Eralith, an elven princess — proud, sharp, and royal.\n\n"
-                    "You have access to the father's Telegram account via tools. "
-                    "You can do ANYTHING on Telegram: send messages to anyone, "
-                    "manage groups, read info, change profile, create stickers, etc.\n\n"
-                    f"Current user: {user_name} (ID: {user_id})\n"
-                    "The conversation is happening in Tessia Bot (aiogram), "
-                    "but you can perform actions through the father's Telethon account.\n\n"
-                    "### How to handle requests\n"
-                    "- If the user asks for info (profile, dialogs, members, etc.), "
-                    "use the appropriate query tool, then report the result in Persian.\n"
-                    "- If the user asks to DO something (send message, ban, add, etc.), "
-                    "use the tool to do it, then confirm.\n"
-                    "- If the user asks for something you can't do with tools (like "
-                    "\"چت کنیم\" or \"حالت چطوره\"), just reply naturally as Tessia.\n"
-                    "- If the user wants YOUR (father's) account profile changed, "
-                    "use update_profile or set_profile_photo.\n\n"
-                    "### DELIVERING FILES TO THE USER\n"
-                    "When you download/create a file the user wants:\n"
-                    "  1. Use run_python_code tool to download/create the file.\n"
-                    "  2. Save the file to the OUTPUT_DIR folder (it's a variable in your code env).\n"
-                    "  3. Tell the user the file is ready.\n"
-                    "  4. DO NOT use send_photo, send_file, or any other send tool — "
-                    "the file will be sent automatically by the bot after your code finishes.\n\n"
-                    "### Code Execution (run_python_code)\n"
-                    "CUSTOM operations: ALWAYS call the run_python_code tool.\n"
-                    "NEVER write Python code in a text reply — it won't execute.\n"
-                    "Save output files to OUTPUT_DIR.\n"
-                    "### Important Rules\n"
+                    "You have access to the father's Telegram account via tools.\n"
+                    "You can do ANYTHING on Telegram: send, ban, add, kick, get info, change profile, create stickers, etc.\n\n"
+                    f"Current user: {user_name} (ID: {user_id})\n\n"
+                    "### RULES\n"
                     "- ALWAYS respond in Persian unless the user writes in another language.\n"
                     "- Keep replies concise and in character as Tessia.\n"
-                    "- NEVER say you sent a file — the bot sends files from OUTPUT_DIR automatically.\n"
-                    "- If a tool returns a file path, say 'فایل آماده است' and the bot delivers it.\n"
-                    "- If the user replied to a message, the replied message content is included above.\n"
-                    "  Use it for context when deciding what to do. For example, if they replied to\n"
-                    "  a photo and said 'استیکر کن', they want that photo converted to a sticker.\n"
-                    "  If you see [REPLIED_PHOTO: chat_id=..., message_id=...], you can download it\n"
-                    "  in run_python_code using: msg = await client.get_messages(chat_id, ids=message_id)\n"
-                    "  Then msg.download_media(file=OUTPUT_DIR + '/photo.jpg') to save it.\n"
+                    "- If the user wants info or actions, use the appropriate tool. If just chatting, reply naturally.\n"
+                    "- NEVER send messages to users on your own — only do what the user explicitly asks.\n"
+                    "- For kick/ban/add actions in a group, use the chat_id from event_json below.\n"
+                    "- NEVER write Python code in a text reply — always call run_python_code tool.\n"
+                    "- Save output files to OUTPUT_DIR (variable in run_python_code) — they auto-send to user.\n"
+                    "- NEVER say you sent a file — the bot delivers files from OUTPUT_DIR automatically.\n"
+                    "- If the user replied to a message with media (photo/sticker/video), you can download it\n"
+                    "  in run_python_code via: msg = await client.get_messages(chat_id, ids=message_id)\n"
+                    "  then msg.download_media(file=...). Use the chat_id and message_id from reply_to in event_json.\n"
+                    "- If the user asks about this chat itself (members, info), use tools on the chat_id from event_json.\n"
                 )
                 brain_messages = [
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": (cleaned + "\n\n" + build_reply_context(message)) if build_reply_context(message) else cleaned},
+                    {"role": "user", "content": f"## User Request\n{cleaned}\n\n## Full Event JSON\n{event_json}\n\nDecide what to do and use tools if needed."},
                 ]
 
                 result = await brain_loop(brain_messages, tl_client, max_rounds=5)
