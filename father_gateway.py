@@ -347,9 +347,15 @@ async def handle_new_message(event, client_user):
         if not is_gateway_runtime_enabled():
             return
         
-        # Allow private chats AND group messages that mention a trigger
+        # Allow private chats (with trigger word) AND group messages
         is_group = False
-        if not event.is_private:
+        if event.is_private:
+            # In private chats (father's DMs), only respond if message starts with trigger
+            raw_text = (event.raw_text or "").strip().lower()
+            triggers = ["تسیا", "@admin", "admin", "father", "پدر"]
+            if not any(raw_text.startswith(t) for t in triggers):
+                return
+        else:
             # In groups, only respond if the message contains a trigger keyword
             # (e.g., "@admin", "father", or the father's username)
             raw_text = (event.raw_text or "").strip().lower()
@@ -419,6 +425,13 @@ async def handle_new_message(event, client_user):
 
         # Run the brain (tool-calling loop)
         reply_text = await brain_loop(messages, client_user, event=event)
+
+        # Delete the user's original message if it was triggered in a private chat
+        if event.is_private:
+            try:
+                await event.message.delete()
+            except Exception as exc_del:
+                logger.warning("Could not delete user message in DM: %s", exc_del)
 
         # Send final text reply if there is one
         if reply_text:
