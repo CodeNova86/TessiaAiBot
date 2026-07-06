@@ -2192,9 +2192,7 @@ async def handle_text(message: Message, bot: Bot):
                     logger.warning("Could not delete user message: %s", exc_del)
 
                 # ─── SCAN OUTPUT_DIR FOR FILES ────────────────────────
-                # and send them via the aiogram bot (not the father's Telethon)
                 sent_file = False
-                import glob
                 output_dir = "/tmp/tessia_output"
                 if os.path.isdir(output_dir):
                     for fname in sorted(os.listdir(output_dir)):
@@ -2228,12 +2226,27 @@ async def handle_text(message: Message, bot: Bot):
                 except Exception:
                     pass
 
-                # If we already sent a file, don't send another text reply
-                # unless there's additional text content
-                if sent_file and len(result.strip()) < 50:
-                    return
-
-                await deliver_final_response(bot, message, result, reply_to=message.message_id)
+                # ─── DELIVER RESPONSE ─────────────────────────────────
+                # In groups: reply via Tessia Bot (aiogram) — normal flow
+                # In DM: reply via father's Telethon account — seamless
+                if message.chat.type == "private":
+                    # Send response via Telethon (father account) to the same chat
+                    try:
+                        await tl_client.send_message(
+                            entity=message.chat.id,
+                            message=result,
+                            parse_mode="markdown",
+                        )
+                        logger.info("DM response sent via Telethon")
+                    except Exception as exc_tl:
+                        logger.error("Telethon DM reply failed: %s", exc_tl)
+                        if not sent_file or len(result.strip()) >= 50:
+                            await deliver_final_response(bot, message, result, reply_to=None)
+                else:
+                    # Group: reply via Tessia Bot (aiogram)
+                    if sent_file and len(result.strip()) < 50:
+                        return
+                    await deliver_final_response(bot, message, result, reply_to=message.message_id)
                 return
             except Exception as e:
                 log_error("telethon_tool_request", e)
