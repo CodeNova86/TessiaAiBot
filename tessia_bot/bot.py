@@ -2227,30 +2227,12 @@ async def handle_text(message: Message, bot: Bot):
                     pass
 
                 # ─── DELIVER RESPONSE ─────────────────────────────────
-                is_dm_with_bot = message.chat.type == "private" and message.chat.id == message.from_user.id
-                if is_dm_with_bot:
-                    # DM with Tessia Bot itself — reply via aiogram
-                    if sent_file and len(result.strip()) < 50:
-                        return
-                    await deliver_final_response(bot, message, result, reply_to=None)
-                elif message.chat.type == "private":
-                    # DM with another person (via father's account) — reply via Telethon
-                    try:
-                        await tl_client.send_message(
-                            entity=message.chat.id,
-                            message=result,
-                            parse_mode="markdown",
-                        )
-                        logger.info("DM response sent via Telethon to chat=%s", message.chat.id)
-                    except Exception as exc_tl:
-                        logger.error("Telethon DM reply failed: %s", exc_tl)
-                        if not sent_file or len(result.strip()) >= 50:
-                            await deliver_final_response(bot, message, result, reply_to=None)
-                else:
-                    # Group — reply via Tessia Bot (aiogram)
-                    if sent_file and len(result.strip()) < 50:
-                        return
-                    await deliver_final_response(bot, message, result, reply_to=message.message_id)
+                # We're in handle_text (aiogram) — any private message here means
+                # the user is chatting directly with Tessia Bot.
+                # Reply via aiogram in all cases except when explicitly told to use Telethon.
+                if sent_file and len(result.strip()) < 50:
+                    return
+                await deliver_final_response(bot, message, result, reply_to=None)
                 return
             except Exception as e:
                 log_error("telethon_tool_request", e)
