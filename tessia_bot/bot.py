@@ -2168,8 +2168,6 @@ async def handle_text(message: Message, bot: Bot):
                     "- NEVER write Python code in a text reply — always call run_python_code tool.\n"
                     "- Save output files to OUTPUT_DIR (variable in run_python_code) — they auto-send to user.\n"
                     "- NEVER say you sent a file — the bot delivers files from OUTPUT_DIR automatically.\n"
-                    "- The user's original message starting with 'تسیا' is already deleted automatically.\n"
-                    "  You don't need to delete it yourself.\n"
                     "- If the user replied to a message with media (photo/sticker/video), you can download it\n"
                     "  in run_python_code via: msg = await client.get_messages(chat_id, ids=message_id)\n"
                     "  then msg.download_media(file=...). Use the chat_id and message_id from reply_to in event_json.\n"
@@ -2181,16 +2179,6 @@ async def handle_text(message: Message, bot: Bot):
                 ]
 
                 result = await brain_loop(brain_messages, tl_client, max_rounds=5)
-
-                # ─── DELETE THE USER'S ORIGINAL MESSAGE ──────────────
-                try:
-                    # Delete the user's message that started with "تسیا"
-                    await bot.delete_message(
-                        chat_id=message.chat.id,
-                        message_id=message.message_id,
-                    )
-                except Exception as exc_del:
-                    logger.warning("Could not delete user message: %s", exc_del)
 
                 # ─── SCAN OUTPUT_DIR FOR FILES ────────────────────────
                 # and send them via the aiogram bot (not the father's Telethon)
