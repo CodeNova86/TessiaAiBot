@@ -2227,23 +2227,27 @@ async def handle_text(message: Message, bot: Bot):
                     pass
 
                 # ─── DELIVER RESPONSE ─────────────────────────────────
-                # In groups: reply via Tessia Bot (aiogram) — normal flow
-                # In DM: reply via father's Telethon account — seamless
-                if message.chat.type == "private":
-                    # Send response via Telethon (father account) to the same chat
+                is_dm_with_bot = message.chat.type == "private" and message.chat.id == message.from_user.id
+                if is_dm_with_bot:
+                    # DM with Tessia Bot itself — reply via aiogram
+                    if sent_file and len(result.strip()) < 50:
+                        return
+                    await deliver_final_response(bot, message, result, reply_to=None)
+                elif message.chat.type == "private":
+                    # DM with another person (via father's account) — reply via Telethon
                     try:
                         await tl_client.send_message(
                             entity=message.chat.id,
                             message=result,
                             parse_mode="markdown",
                         )
-                        logger.info("DM response sent via Telethon")
+                        logger.info("DM response sent via Telethon to chat=%s", message.chat.id)
                     except Exception as exc_tl:
                         logger.error("Telethon DM reply failed: %s", exc_tl)
                         if not sent_file or len(result.strip()) >= 50:
                             await deliver_final_response(bot, message, result, reply_to=None)
                 else:
-                    # Group: reply via Tessia Bot (aiogram)
+                    # Group — reply via Tessia Bot (aiogram)
                     if sent_file and len(result.strip()) < 50:
                         return
                     await deliver_final_response(bot, message, result, reply_to=message.message_id)
