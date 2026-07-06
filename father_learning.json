@@ -5,14 +5,37 @@
     "catchphrases": {},
     "topics": {
       "سلام": 4,
-      "تسیا": 2
+      "تسیا": 2,
+      "خوبی؟": 1
     },
     "our_replied_stickers": [],
     "our_replied_gifs": [],
-    "total_messages": 6,
-    "last_interaction": 1783381092.060449
+    "total_messages": 7,
+    "last_interaction": 1783381360.8611038
   },
   "7908720352": {
+    "frequent_stickers": [],
+    "frequent_gifs": [],
+    "catchphrases": {},
+    "topics": {},
+    "our_replied_stickers": [],
+    "our_replied_gifs": [],
+    "total_messages": 0,
+    "last_interaction": 0.0
+  },
+  "tessiaaibot": {
+    "frequent_stickers": [],
+    "frequent_gifs": [],
+    "catchphrases": {},
+    "topics": {
+      "تسیا": 1
+    },
+    "our_replied_stickers": [],
+    "our_replied_gifs": [],
+    "total_messages": 1,
+    "last_interaction": 1783381295.7945187
+  },
+  "1548469285": {
     "frequent_stickers": [],
     "frequent_gifs": [],
     "catchphrases": {},

@@ -29,7 +29,7 @@
       "content": "اسمش آمیره",
       "confidence": 1.0,
       "created_at": 1783379657.4117017,
-      "updated_at": 1783381224.364297,
+      "updated_at": 1783381417.6144016,
       "source_chat_id": ""
     },
     {
@@ -39,7 +39,7 @@
       "content": "پدر تسیا است",
       "confidence": 1.0,
       "created_at": 1783379657.4121044,
-      "updated_at": 1783381224.3647242,
+      "updated_at": 1783381417.6151214,
       "source_chat_id": ""
     },
     {
@@ -49,7 +49,7 @@
       "content": "کاربر صاحب اکانته",
       "confidence": 1.0,
       "created_at": 1783379657.4132802,
-      "updated_at": 1783381224.3652432,
+      "updated_at": 1783381417.6158032,
       "source_chat_id": ""
     },
     {
@@ -59,7 +59,7 @@
       "content": "پدر تسیا (صاحب ربات)",
       "confidence": 1.0,
       "created_at": 1783379657.4138274,
-      "updated_at": 1783381224.3657439,
+      "updated_at": 1783381417.6165707,
       "source_chat_id": ""
     },
     {
@@ -67,9 +67,9 @@
       "user_id": "1548469285",
       "fact_type": "name",
       "content": "اسمش تسیا است",
-      "confidence": 0.9,
+      "confidence": 1.0,
       "created_at": 1783380521.977312,
-      "updated_at": 1783380521.977312,
+      "updated_at": 1783381381.5194263,
       "source_chat_id": "1548469285"
     },
     {
@@ -121,7 +121,7 @@
       "content": "آمیر (AmirhosinAR86)",
       "confidence": 1.0,
       "created_at": 1783379657.4167976,
-      "updated_at": 1783381224.3661337,
+      "updated_at": 1783381417.61725,
       "source_chat_id": ""
     },
     {
@@ -131,8 +131,20 @@
       "content": "پدر تسیا",
       "confidence": 1.0,
       "created_at": 1783379657.4173799,
-      "updated_at": 1783381224.3666158,
+      "updated_at": 1783381417.6179547,
       "source_chat_id": ""
+    }
+  ],
+  "8825026272": [
+    {
+      "fact_id": "f_8825026272_1783381304_4980",
+      "user_id": "8825026272",
+      "fact_type": "name",
+      "content": "تسیا نام یا لقب کاربر است",
+      "confidence": 0.6,
+      "created_at": 1783381304.157549,
+      "updated_at": 1783381304.157549,
+      "source_chat_id": "8825026272"
     }
   ]
 }
