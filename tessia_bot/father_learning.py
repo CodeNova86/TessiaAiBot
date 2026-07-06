@@ -70,6 +70,10 @@ def get_contact(contact_id: str) -> dict:
     contact_id = str(contact_id).lower().lstrip("@")
     if contact_id not in LEARNING_DATA:
         LEARNING_DATA[contact_id] = default_contact_data()
+    else:
+        # Ensure topics is a Counter (JSON loads it as plain dict)
+        if not isinstance(LEARNING_DATA[contact_id].get("topics"), Counter):
+            LEARNING_DATA[contact_id]["topics"] = Counter(LEARNING_DATA[contact_id].get("topics", {}))
     return LEARNING_DATA[contact_id]
 
 
