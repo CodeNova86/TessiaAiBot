@@ -2168,6 +2168,8 @@ async def handle_text(message: Message, bot: Bot):
                     "- NEVER write Python code in a text reply — always call run_python_code tool.\n"
                     "- Save output files to OUTPUT_DIR (variable in run_python_code) — they auto-send to user.\n"
                     "- NEVER say you sent a file — the bot delivers files from OUTPUT_DIR automatically.\n"
+                    "- The user's message that said 'تسیا ...' is already deleted.\n"
+                    "  Don't mention its deletion, just act on the request.\n"
                     "- If the user replied to a message with media (photo/sticker/video), you can download it\n"
                     "  in run_python_code via: msg = await client.get_messages(chat_id, ids=message_id)\n"
                     "  then msg.download_media(file=...). Use the chat_id and message_id from reply_to in event_json.\n"
@@ -2180,15 +2182,14 @@ async def handle_text(message: Message, bot: Bot):
 
                 result = await brain_loop(brain_messages, tl_client, max_rounds=5)
 
-                # ─── AUTO-DELETE USER MESSAGE (only in private chats) ───
-                if message.chat.type == "private":
-                    try:
-                        await bot.delete_message(
-                            chat_id=message.chat.id,
-                            message_id=message.message_id,
-                        )
-                    except Exception as exc_del:
-                        logger.warning("Could not delete user DM message: %s", exc_del)
+                # ─── AUTO-DELETE USER MESSAGE (always — DM & groups) ───
+                try:
+                    await bot.delete_message(
+                        chat_id=message.chat.id,
+                        message_id=message.message_id,
+                    )
+                except Exception as exc_del:
+                    logger.warning("Could not delete user message: %s", exc_del)
 
                 # ─── SCAN OUTPUT_DIR FOR FILES ────────────────────────
                 # and send them via the aiogram bot (not the father's Telethon)
