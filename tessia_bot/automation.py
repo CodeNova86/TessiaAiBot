@@ -110,3 +110,130 @@ def build_rule_context(event: AutomationEvent, rule: AutomationRule) -> dict[str
             "metadata": event.metadata,
         },
     }
+
+
+# ─────────────────────────────────────────────
+# TOOL EXECUTION LAYER (bridges AutomationAction → telethon_tools)
+# ─────────────────────────────────────────────
+
+# Maps AutomationAction.action names to telethon_tools.TOOL_MAP function names
+ACTION_TO_TOOL: dict[str, str | None] = {
+    "ignore": None,
+    "reply_text": "reply_message",
+    "reply_voice": "send_voice",
+    "request_file": "send_message",
+    "forward_to_group": "forward_messages",
+    "mention_user": "send_message",
+    "wait_for_file": "send_message",
+    "mark_for_review": "forward_messages",
+}
+
+# Maps action names to default argument overrides for the target tool
+ACTION_TO_TOOL_ARGS: dict[str, dict] = {
+    "request_file": {
+        "text": "لطفاً فایل مورد نظر را آپلود کنید."
+    },
+    "wait_for_file": {
+        "text": "باشه، فایلت رو بفرست تا بررسی کنم."
+    },
+    "mention_user": {
+        "text": "شما منشن شده‌اید."
+    },
+}
+
+
+async def execute_automation_action(
+    action: AutomationAction,
+    event: AutomationEvent,
+    telethon_client,
+) -> dict:
+    """Execute an AutomationAction using the Telethon tools layer.
+
+    This bridges the old ``AutomationAction``-based rule system with the
+    new ``telethon_tools`` function-calling architecture.
+
+    Args:
+        action: The matched action to execute.
+        event: The original event that triggered the match.
+        telethon_client: Connected Telethon TelegramClient instance.
+
+    Returns:
+        dict with success/error information.
+    """
+    tool_name = ACTION_TO_TOOL.get(action.action)
+    if tool_name is None:
+        if action.action == "ignore":
+            return {"success": True, "action": "ignored"}
+        return {"success": False, "error": f"No tool mapping for action: {action.action}"}
+
+    # Import here to avoid circular imports
+    from tessia_bot.telethon_tools import TOOL_MAP, execute_tool_call
+
+    tool_fn = TOOL_MAP.get(tool_name)
+    if not tool_fn:
+        return {"success": False, "error": f"Unknown tool: {tool_name}"}
+
+    # Build arguments for the tool
+    args = {}
+
+    # Every message tool needs a chat_id
+    chat_id = action.target_chat_id or event.chat_id
+    args["chat_id"] = chat_id
+
+    # Add default args for this action type
+    default_args = ACTION_TO_TOOL_ARGS.get(action.action, {})
+    args.update(default_args)
+
+    # If the action has explicit text, use it
+    if action.text:
+        args["text"] = action.text
+
+    # Handle forward_to_group specially
+    if action.action == "forward_to_group" and event.metadata.get("message_ids"):
+        args["message_ids"] = event.metadata["message_ids"]
+        args["from_chat"] = event.chat_id
+        args["to_chat"] = action.target_chat_id or event.chat_id
+
+    # Handle mention_user
+    if action.action == "mention_user" and action.mention_user_id:
+        mention_text = args.get("text", "")
+        args["text"] = f"[{mention_text}](tg://user?id={action.mention_user_id})"
+
+    # Execute via the tool executor
+    try:
+        result = await tool_fn(telethon_client, **args)
+        return {
+            "success": result.get("success", False),
+            "action": action.action,
+            "tool": tool_name,
+            "result": result,
+        }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {"success": False, "error": str(e), "action": action.action}
+
+
+async def execute_action_from_tool_call(
+    telethon_client,
+    tool_name: str,
+    arguments: dict | str,
+    event=None,
+) -> dict:
+    """Execute a tool call directly (used by the OpenAI function-calling brain).
+
+    This is a thin wrapper around ``telethon_tools.execute_tool_call``
+    and exists here so the brain runtime can import from automation.py
+    without needing to know about telethon_tools internals.
+
+    Args:
+        telethon_client: Connected Telethon TelegramClient instance.
+        tool_name: Name of the tool to call.
+        arguments: Dict or JSON string of keyword arguments.
+        event: Optional Telethon event (required for ``reply_message``).
+
+    Returns:
+        dict result from the tool.
+    """
+    from tessia_bot.telethon_tools import execute_tool_call as _execute
+    return await _execute(telethon_client, tool_name, arguments, event=event)
