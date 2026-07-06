@@ -92,6 +92,8 @@ from tessia_bot.state import (
     user_labels,
     user_profiles,
 )
+from tessia_bot.telethon_client_manager import get_client, is_ready as telethon_is_ready
+from tessia_bot.telethon_tools import TOOL_SCHEMAS, execute_tool_call
 
 # =========================
 # CONFIG
@@ -2009,6 +2011,70 @@ async def handle_text(message: Message, bot: Bot):
 
     update_name_mapping(user_id, user_name)
     update_user_language(user_id, text)
+
+    # ─── Telethon tool-request detection ──────────────────────────
+    # If the message starts with "تسیا", clean the prefix and check
+    # whether the user is asking for a Telegram action that needs the
+    # father account (Telethon tools). This runs BEFORE the normal AI path.
+    cleaned = clean_tessia_prefix(text) if should_answer(message, bot) else text
+    TOOL_TRIGGERS = [
+        "بفرست", "send", "forward", "فوروارد", "پین", "pin",
+        "بن", "ban", "کیک", "kick", "اد", "add", "حذف کن", "delete",
+        "پیام بده", "بگو", "tell",
+        "اعضا", "members", "participants", "ممبرا",
+        "گروه بساز", "create group", "channel", "کانال بساز",
+        "profile", "پروفایل", "username", "یوزرنیم",
+        "بیو", "bio", "avatar", "avatar",
+        "search", "سرچ", "find", "get dialogs", "dialogs",
+        "invite", "invite link", "لینک دعوت",
+        "انپین", "unpin", "edit", "ویرایش", "mark read",
+        "مشترک", "member", "عضو جدید",
+    ]
+    wants_tool = any(trigger in cleaned.lower() for trigger in TOOL_TRIGGERS) if cleaned else False
+    is_tool_request = wants_tool and telethon_is_ready()
+
+    if is_tool_request:
+        tl_client = get_client()
+        if tl_client and tl_client.is_connected():
+            try:
+                thinking_msg = await message.reply("دارم از ابزارهای تلگرام استفاده می‌کنم... 🔧")
+                from father_gateway import brain_loop
+
+                # Build messages: system prompt with tools + user request
+                system_prompt = (
+                    "You are Tessia Eralith, an elven princess. You have access to the father's "
+                    "Telegram account through Telethon tools. The user is asking you to perform "
+                    "an action on Telegram. Decide which tool to use and execute it.\n\n"
+                    f"Current user: {user_name} (ID: {user_id})\n"
+                    "If the user asks about group members, chat info, or anything informational, "
+                    "use the appropriate query tool first, then report the result.\n"
+                    "If the user asks to send a message to someone, use send_message with the "
+                    "correct chat_id or username.\n"
+                    "Always respond in Persian unless the user speaks English.\n"
+                    "Keep replies concise."
+                )
+                brain_messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": f"کاربر می‌گه: {cleaned}\n\nاز ابزارهای تلگرام استفاده کن و نتیجه رو گزارش بده."},
+                ]
+
+                result = await brain_loop(brain_messages, tl_client, max_rounds=5)
+                try:
+                    await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+                except Exception:
+                    pass
+                await deliver_final_response(bot, message, result, reply_to=message.message_id)
+                return
+            except Exception as e:
+                log_error("telethon_tool_request", e)
+                await safe_send_message(
+                    bot, message.chat.id,
+                    f"خطا در اجرای ابزار: {str(e)}",
+                    reply_to=message.message_id,
+                )
+                return
+
+    # ─── End of tool-request path ──────────────────────────────────
 
     if is_father(user_id) and message.chat.type == "private":
         normalized_text = text.strip().lower()

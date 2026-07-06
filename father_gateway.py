@@ -41,6 +41,7 @@ from tessia_bot.state import (
     log_error,
     update_user_language,
 )
+from tessia_bot.telethon_client_manager import set_client
 from tessia_bot.telethon_tools import TOOL_SCHEMAS, TOOL_MAP, execute_tool_call
 
 logger = get_logger("father_gateway")
@@ -391,6 +392,8 @@ async def main():
         await handle_new_message(event, client_user)
 
     await client_user.start()
+    # Register the client so Tessia Bot can use Telethon tools too
+    set_client(client_user)
     logger.info("Father gateway v2 started with %d tools available.", len(TOOL_SCHEMAS))
     await client_user.run_until_disconnected()
 
