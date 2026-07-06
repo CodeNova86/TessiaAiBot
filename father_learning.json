@@ -4,12 +4,22 @@
     "frequent_gifs": [],
     "catchphrases": {},
     "topics": {
-      "تسیا": 2,
-      "سلام": 1
+      "سلام": 3,
+      "تسیا": 2
     },
     "our_replied_stickers": [],
     "our_replied_gifs": [],
-    "total_messages": 3,
-    "last_interaction": 1783380760.601183
+    "total_messages": 5,
+    "last_interaction": 1783381006.8916965
+  },
+  "7908720352": {
+    "frequent_stickers": [],
+    "frequent_gifs": [],
+    "catchphrases": {},
+    "topics": {},
+    "our_replied_stickers": [],
+    "our_replied_gifs": [],
+    "total_messages": 0,
+    "last_interaction": 0.0
   }
 }

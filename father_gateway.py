@@ -445,8 +445,9 @@ async def handle_new_message(event, client_user):
         # Run the brain (tool-calling loop)
         reply_text = await brain_loop(messages, client_user, event=event)
 
-        # Delete the user's original message if it was triggered in a private chat
-        if event.is_private:
+        # Delete the user's original message only for self-commands (our own outgoing messages)
+        # Never delete incoming whitelisted messages from other people
+        if event.out and event.is_private:
             try:
                 await event.message.delete()
             except Exception as exc_del:
