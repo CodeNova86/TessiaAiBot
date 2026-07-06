@@ -2180,6 +2180,16 @@ async def handle_text(message: Message, bot: Bot):
 
                 result = await brain_loop(brain_messages, tl_client, max_rounds=5)
 
+                # ─── AUTO-DELETE USER MESSAGE (only in private chats) ───
+                if message.chat.type == "private":
+                    try:
+                        await bot.delete_message(
+                            chat_id=message.chat.id,
+                            message_id=message.message_id,
+                        )
+                    except Exception as exc_del:
+                        logger.warning("Could not delete user DM message: %s", exc_del)
+
                 # ─── SCAN OUTPUT_DIR FOR FILES ────────────────────────
                 # and send them via the aiogram bot (not the father's Telethon)
                 sent_file = False

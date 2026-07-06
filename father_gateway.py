@@ -346,8 +346,23 @@ async def handle_new_message(event, client_user):
     try:
         if not is_gateway_runtime_enabled():
             return
+        
+        # Allow private chats AND group messages that mention a trigger
+        is_group = False
         if not event.is_private:
-            return
+            # In groups, only respond if the message contains a trigger keyword
+            # (e.g., "@admin", "father", or the father's username)
+            raw_text = (event.raw_text or "").strip().lower()
+            me = await client_user.get_me()
+            my_username = (getattr(me, "username", "") or "").lower()
+            triggers = ["@admin", "admin", "father", "پدر"]
+            if my_username:
+                triggers.append(f"@{my_username}")
+                triggers.append(my_username)
+            if not any(t in raw_text for t in triggers):
+                return
+            is_group = True
+        
         sender = await event.get_sender()
         if sender is None or getattr(sender, "bot", False):
             return
