@@ -1,0 +1,24 @@
+{
+  "123": [
+    {
+      "fact_id": "f_123_1783379413_5104",
+      "user_id": "123",
+      "fact_type": "name",
+      "content": "اسمش علی است",
+      "confidence": 0.9,
+      "created_at": 1783379413.1443381,
+      "updated_at": 1783379413.1443381,
+      "source_chat_id": ""
+    },
+    {
+      "fact_id": "f_123_1783379413_6628",
+      "user_id": "123",
+      "fact_type": "preference",
+      "content": "فیلم ترسناک دوست دارد",
+      "confidence": 0.8,
+      "created_at": 1783379413.144704,
+      "updated_at": 1783379413.144704,
+      "source_chat_id": ""
+    }
+  ]
+}

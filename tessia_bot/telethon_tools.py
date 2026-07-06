@@ -1630,6 +1630,25 @@ async def execute_tool_call(
             if val.lstrip("-").isdigit():
                 arguments[key] = int(val)
 
+    # NEVER allow sending tools to groups via Telethon from the Tessia Bot brain
+    # Only the gateway (father's DM handler) should send to groups.
+    # Query tools (get_*, search_*) are fine.
+    chat_id = arguments.get("chat_id") or arguments.get("to_chat") or 0
+    if isinstance(chat_id, int) and chat_id < 0:
+        sending_tools = {
+            "send_message", "reply_message", "forward_messages",
+            "edit_message", "delete_messages",
+            "send_file", "send_photo", "send_voice", "send_media_group",
+            "kick_participant", "ban_participant", "unban_participant",
+            "add_participant", "leave_chat", "create_group", "create_channel",
+            "pin_message", "unpin_message", "mark_read",
+            "set_profile_photo", "update_profile",
+            "export_chat_invite_link",
+        }
+        if tool_name in sending_tools:
+            logger.warning("BLOCKED: %s to group chat_id=%s from Tessia Bot brain", tool_name, chat_id)
+            return {"success": False, "error": f"Cannot use {tool_name} in groups via Telethon. Use Tessia Bot instead."}
+
     # Inject event for reply_message
     if tool_name == "reply_message" and event is not None:
         arguments["event"] = event

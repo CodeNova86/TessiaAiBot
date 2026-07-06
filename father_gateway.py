@@ -448,6 +448,14 @@ async def handle_new_message(event, client_user):
                 event.chat_id,
                 len(reply_text),
             )
+            # Fire-and-forget: extract facts for long-term memory
+            from tessia_bot.memory_extractor import extract_and_store
+            import asyncio
+            asyncio.create_task(extract_and_store(
+                user_id=target_id, user_text=text,
+                ai_text=reply_text, chat_id=str(event.chat_id),
+                source="father_gateway",
+            ))
     except Exception as exc:
         log_error("father_gateway", exc)
 

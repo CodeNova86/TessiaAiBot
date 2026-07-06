@@ -96,6 +96,8 @@ from tessia_bot.state import (
 from tessia_bot.telethon_client_manager import get_client, is_ready as telethon_is_ready
 from tessia_bot.telethon_tools import TOOL_SCHEMAS, execute_tool_call
 from tessia_bot.father_learning import get_learning_summary
+from tessia_bot.memory_facts import fact_memory
+from tessia_bot.memory_extractor import extract_and_store
 
 # =========================
 # CONFIG
@@ -1133,6 +1135,12 @@ def build_common_system_context(user_id, user_name, memory_key):
     system_content = SYSTEM_PROMPT + f"\n\nuser chat_id : {user_id}\nuser name : {user_name}" + father_context + first_contact_context
     system_content += "\n\n" + relationship_context
     system_content += "\n- اگر برای این شخص دستور یا لقب از پدر وجود دارد، اجرای آن اجباری است و نباید با حافظه، حدس، یا نظر دیگران قاطی شود."
+
+    # Inject long-term memory facts
+    memory_context = fact_memory.build_context(user_id)
+    if memory_context:
+        system_content += "\n\n" + memory_context
+
     return system_content
 
 
@@ -2391,6 +2399,12 @@ async def handle_text(message: Message, bot: Bot):
         remember_message(memory_key, "assistant", full_response)
         await maybe_refresh_memory_summary(user_id, memory_key)
         save_data()
+        # Fire-and-forget: extract facts for long-term memory
+        asyncio.create_task(extract_and_store(
+            user_id=user_id, user_text=text,
+            ai_text=full_response, chat_id=str(message.chat.id),
+            source="tessia_bot",
+        ))
         await deliver_final_response(
             bot,
             message,
