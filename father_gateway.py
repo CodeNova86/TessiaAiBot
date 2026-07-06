@@ -300,18 +300,18 @@ async def build_recent_chat_messages(
         parts = []
         if text:
             parts.append(text[:1500])
-        if msg.sticker:
+        if getattr(msg, 'sticker', None):
             emoji = msg.sticker.emoji or ""
             parts.append(f"[sticker: {emoji}]")
-        if msg.animation:  # GIF
+        if getattr(msg, 'animation', None):  # GIF
             parts.append("[GIF]")
-        if msg.photo:
+        if getattr(msg, 'photo', None):
             parts.append("[photo]")
-        if msg.voice:
+        if getattr(msg, 'voice', None):
             parts.append("[voice]")
-        if msg.video:
+        if getattr(msg, 'video', None):
             parts.append("[video]")
-        if msg.document:
+        if getattr(msg, 'document', None):
             parts.append(f"[file: {msg.document.file_name or 'unknown'}]")
 
         content = " ".join(parts).strip()
