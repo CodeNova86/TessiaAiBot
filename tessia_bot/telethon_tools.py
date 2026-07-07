@@ -1063,6 +1063,23 @@ async def run_python_code(
         )
         captured = redirected.getvalue()
         logger.info("run_python_code: executed %d chars, result=%s", len(code), str(result)[:200])
+
+        # Auto-scan for recently created files and move to OUTPUT_DIR
+        output_dir = "/tmp/tessia_output"
+        os.makedirs(output_dir, exist_ok=True)
+        import glob
+        recent_dirs = ["/tmp/soundcloud_downloads", "/tmp/downloads", "/tmp/ytdl", output_dir]
+        for d in recent_dirs:
+            if os.path.isdir(d):
+                for f in os.listdir(d):
+                    src = os.path.join(d, f)
+                    if os.path.isfile(src) and os.path.getsize(src) > 1024:
+                        dst = os.path.join(output_dir, f)
+                        if src != dst:
+                            import shutil
+                            shutil.copy2(src, dst)
+                            logger.info("Auto-copied file to OUTPUT_DIR: %s", dst)
+
         return {
             "success": True,
             "stdout": captured.strip(),
