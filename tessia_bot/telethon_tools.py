@@ -1067,15 +1067,14 @@ async def run_python_code(
         # Auto-scan for recently created files and move to OUTPUT_DIR
         output_dir = "/tmp/tessia_output"
         os.makedirs(output_dir, exist_ok=True)
-        import glob
-        recent_dirs = ["/tmp/soundcloud_downloads", "/tmp/downloads", "/tmp/ytdl", output_dir]
+        recent_dirs = ["/tmp/tessia_output", "/tmp/cats", "/tmp/downloads", "/tmp/ytdl"]
         for d in recent_dirs:
             if os.path.isdir(d):
                 for f in os.listdir(d):
                     src = os.path.join(d, f)
-                    if os.path.isfile(src) and os.path.getsize(src) > 1024:
+                    if os.path.isfile(src) and os.path.getsize(src) > 1024 and f.endswith(('.jpg', '.png', '.jpeg', '.webp', '.gif', '.mp4', '.mp3')):
                         dst = os.path.join(output_dir, f)
-                        if src != dst:
+                        if src != dst and not os.path.exists(dst):
                             import shutil
                             shutil.copy2(src, dst)
                             logger.info("Auto-copied file to OUTPUT_DIR: %s", dst)

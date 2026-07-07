@@ -201,6 +201,22 @@ async def brain_loop(
         for tool_call in result:
             tool_name = tool_call["name"]
             arguments = tool_call.get("arguments", {})
+            if not isinstance(arguments, dict):
+                try:
+                    arguments = json.loads(arguments) if isinstance(arguments, str) else {}
+                except Exception:
+                    arguments = {}
+
+            # Validate: run_python_code requires 'code' parameter
+            if tool_name == "run_python_code" and (not arguments or not arguments.get("code")):
+                logger.warning("Skipping run_python_code call without code argument")
+                # Tell the AI it needs to provide code
+                current_messages.append({
+                    "role": "tool",
+                    "tool_call_id": tool_call.get("id", f"call_{tool_name}"),
+                    "content": "Error: run_python_code requires a 'code' parameter with the Python code to execute. Please provide the code."
+                })
+                continue
 
             logger.info(
                 "Brain called tool: %s with args=%s",
@@ -282,7 +298,8 @@ async def build_recent_chat_messages(
         if getattr(msg, 'video', None):
             parts.append("[video]")
         if getattr(msg, 'document', None):
-            parts.append(f"[file: {msg.document.file_name or 'unknown'}]")
+            doc_name = getattr(msg.document, 'file_name', 'unknown') if hasattr(msg, 'document') and msg.document else 'unknown'
+            parts.append(f"[file: {doc_name}]")
 
         content = " ".join(parts).strip()
         if not content:

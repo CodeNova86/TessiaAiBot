@@ -1,137 +1,29 @@
 {
   "memory": {
-    "-1001569565280:1548469285": [
-      {
-        "role": "user",
-        "content": "تسیا"
-      },
-      {
-        "role": "assistant",
-        "content": "بله پدرم؟ ❤️"
-      },
-      {
-        "role": "user",
-        "content": "[gif فرستاد: کاربر یک gif فرستاده.\nمتن همراه: این GIF رو فرستاده.\nبه خودِ حرکت یا منظور ضمنی‌اش جواب بده، نه به محتوای بصری رسانه.]"
-      },
-      {
-        "role": "assistant",
-        "content": "خوب شد یه چیزی فرستادی، حوصله‌ام سر رفته بود. 😏"
-      },
-      {
-        "role": "user",
-        "content": "تسیا راهنما"
-      },
-      {
-        "role": "assistant",
-        "content": "راهنمای تسیا\n\nفقط وقتی جواب می‌دم که:\n- اول پیام بنویسی «تسیا»\n- یا روی یکی از پیام‌های خودم ریپلای کنی\n\nقابلیت‌ها:\n- چت عادی: `تسیا سلام`\n- تولید عکس: `تسیا عکس بساز ...`\n- ویرایش عکس: روی عکس بفرست `تسیا ویرایش ...`\n- پاک‌کردن متن مانهوآ: روی عکس ریپلای کن `تسیا کیلین`\n- ترجمه متن: `تسیا ترجمه کن ...`\n- ترجمه فایل: روی فایل یا همراه فایل بنویس `تسیا ترجمه کن به انگلیسی`\n- تحلیل فایل: روی فایل ریپلای کن و درخواستت را بنویس\n- تحلیل کد: `تسیا تحلیل کد ...`\n- جستجو در فایل‌های قبلی: `تسیا تو فایلای قبلیم ...`\n- کپشن عکس: همراه عکس بنویس `تسیا کپشن`\n- پیام صوتی: voice/audio بفرست\n\nنکته:\n- با پدر تنظیم لقب، رفتار، و reaction media هم انجام می‌شود.\n- پیام‌های قبل از زمان ران شدن بات نباید خوانده شوند."
-      }
-    ],
     "1548469285:1548469285": [
       {
         "role": "user",
-        "content": "https://www.tgju.org/\nاز این سایت قیمت طلا و دلار رو دربیار"
+        "content": "تسیا از این سایت قیمت طلا و دلار رو دربیار\nhttps://www.tgju.org/"
       },
       {
         "role": "assistant",
-        "content": "<tool_call>\n<function=browser>\n<parameter=action>open</parameter>\n<parameter=profile>myself</parameter>\n<parameter=url>https://www.tgju.org/</parameter>\n</function>\n</tool_call>"
-      },
-      {
-        "role": "user",
-        "content": "https://www.tgju.org/\nاز این سایت قیمت طلا و دلار رو دربیار"
-      },
-      {
-        "role": "assistant",
-        "content": "<tool_call>\n<function=browser>\n<parameter=action>extract_text</parameter>\n<parameter=profile>myself</parameter>\n<parameter=element_query>div[data-market-row=\"geram18\"] .info-price, div[data-market-row=\"usd\"] .info-price</parameter>\n</function>\n</tool_call>"
+        "content": "چشم پدر، الان قیمت‌ها رو از سایت درمیارم. ⚡"
       }
     ]
   },
   "user_labels": {
     "8825026272": {
       "label": "",
-      "behavior": "https://www.tgju.org/\nاز این سایت قیمت طلا و دلار رو دربیار"
+      "behavior": "خب لینک با چند روش همزمان برای دانلود تست کن هرکدوم کار کرد با اون بفرست\nhttps://on.soundcloud.com/HA8SEUQlUcwfcZ4oGh"
     }
   },
   "name_to_id": {
-    "wild": "8158558649",
-    "𝛵𝑟𝑢𝑡𝛨": "6185995646",
-    "𝑨𝒓𝒈𝒖𝒔": "8102102438",
-    "arthuraw": "5983502524",
-    "khiam": "7527888690",
-    "god": "5983502524",
-    "elmira": "7908720352",
     "amir": "1548469285",
-    "𝙱𝙴𝙻𝙸𝙰𝙻": "7460168428",
-    "amir hossein": "7012775466",
-    "یونا": "6354715981",
-    "maziar": "6547638552",
     "𝚃𝚎𝚜𝚜𝚒𝚊": "8825026272"
   },
   "reaction_media": {},
   "user_profiles": {
-    "8158558649": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "6185995646": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "8102102438": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "5983502524": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "7527888690": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "English",
-      "last_seen_language": "Persian"
-    },
     "1548469285": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "7460168428": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "7012775466": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "6354715981": {
-      "relationship": "stranger",
-      "memory_summary": "",
-      "voice_reply": false,
-      "preferred_language": "Persian",
-      "last_seen_language": "Persian"
-    },
-    "6547638552": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,
