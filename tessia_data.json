@@ -1,35 +1,34 @@
 {
-  "memory": {
-    "1548469285:1548469285": [
-      {
-        "role": "user",
-        "content": "تسیا"
-      },
-      {
-        "role": "assistant",
-        "content": "سلام پدر... حالت خوبه؟ 💚"
-      }
-    ],
-    "-1001569565280:1548469285": [
-      {
-        "role": "user",
-        "content": "تسیا"
-      },
-      {
-        "role": "assistant",
-        "content": "سلام بابا 💚\nچطور شد یهو یادم افتادی؟"
-      }
-    ]
+  "memory": {},
+  "user_labels": {
+    "8825026272": {
+      "label": "",
+      "behavior": "آره بفرست"
+    }
   },
-  "user_labels": {},
   "name_to_id": {
+    "𝛵𝑟𝑢𝑡𝛨": "6185995646",
+    "یونا": "6354715981",
     "amir": "1548469285",
-    "𝚃𝚎𝚜𝚜𝚒𝚊": "8825026272",
-    "elmira": "7908720352"
+    "𝚃𝚎𝚜𝚜𝚒𝚊": "8825026272"
   },
   "reaction_media": {},
   "user_profiles": {
+    "6354715981": {
+      "relationship": "stranger",
+      "memory_summary": "",
+      "voice_reply": false,
+      "preferred_language": "Persian",
+      "last_seen_language": "Persian"
+    },
     "1548469285": {
+      "relationship": "stranger",
+      "memory_summary": "",
+      "voice_reply": false,
+      "preferred_language": "Persian",
+      "last_seen_language": "Persian"
+    },
+    "6185995646": {
       "relationship": "stranger",
       "memory_summary": "",
       "voice_reply": false,

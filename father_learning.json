@@ -2,16 +2,55 @@
   "elmira87sa": {
     "frequent_stickers": [],
     "frequent_gifs": [],
-    "catchphrases": {},
+    "catchphrases": {
+      "قیمت دلار": 2,
+      "اسمم المیراس": 1,
+      "دوتا اسم‌نیست": 1,
+      "اسم‌نیست یکیه": 1,
+      "هیچی تو": 1,
+      "تو کی": 1,
+      "کی هستی؟": 1,
+      "تو امیر": 1,
+      "امیر مگه": 1,
+      "مگه نیستی؟": 1,
+      "دلار خبر": 1,
+      "خبر داری؟": 1,
+      "نمیدونم میخواستم": 1,
+      "میخواستم بدونم": 1,
+      "بدونم قیمت": 1,
+      "دلار چنده": 1,
+      "چنده بخرم": 1,
+      "بخرم یا": 1,
+      "یا نه": 1,
+      "یک نگاهی": 1,
+      "نگاهی کن": 1
+    },
     "topics": {
-      "سلام": 4,
-      "تسیا": 2,
-      "خوبی؟": 1
+      "سلام": 5,
+      "تسیا": 3,
+      "خوبی؟": 2,
+      "قیمت": 2,
+      "دلار": 2,
+      "اسمم": 1,
+      "المیراس": 1,
+      "دوتا": 1,
+      "اسمنیست": 1,
+      "یکیه": 1,
+      "هیچی": 1,
+      "هستی؟": 1,
+      "امیر": 1,
+      "مگه": 1,
+      "نیستی؟": 1,
+      "خبر": 1,
+      "داری؟": 1,
+      "نمیدونم": 1,
+      "میخواستم": 1,
+      "بدونم": 1
     },
     "our_replied_stickers": [],
     "our_replied_gifs": [],
-    "total_messages": 7,
-    "last_interaction": 1783381360.8611038
+    "total_messages": 17,
+    "last_interaction": 1783381760.5972457
   },
   "7908720352": {
     "frequent_stickers": [],
@@ -28,12 +67,12 @@
     "frequent_gifs": [],
     "catchphrases": {},
     "topics": {
-      "تسیا": 1
+      "تسیا": 2
     },
     "our_replied_stickers": [],
     "our_replied_gifs": [],
-    "total_messages": 1,
-    "last_interaction": 1783381295.7945187
+    "total_messages": 2,
+    "last_interaction": 1783381435.949045
   },
   "1548469285": {
     "frequent_stickers": [],
@@ -44,5 +83,32 @@
     "our_replied_gifs": [],
     "total_messages": 0,
     "last_interaction": 0.0
+  },
+  "amirhosinar86": {
+    "frequent_stickers": [],
+    "frequent_gifs": [],
+    "catchphrases": {},
+    "topics": {
+      "تسیا": 1
+    },
+    "our_replied_stickers": [],
+    "our_replied_gifs": [],
+    "total_messages": 1,
+    "last_interaction": 1783381455.109174
+  },
+  "thefool_arthur": {
+    "frequent_stickers": [],
+    "frequent_gifs": [],
+    "catchphrases": {
+      "تسیا جونم": 2
+    },
+    "topics": {
+      "تسیا": 2,
+      "جونم": 2
+    },
+    "our_replied_stickers": [],
+    "our_replied_gifs": [],
+    "total_messages": 2,
+    "last_interaction": 1783381570.444962
   }
 }
