@@ -1094,6 +1094,49 @@ async def run_python_code(
     finally:
         sys.stdout = old_stdout
 
+
+# ─────────────────────────────────────────────
+# 7. URL FETCH TOOL
+# ─────────────────────────────────────────────
+
+
+async def fetch_url(
+    client: TelegramClient = None,
+    url: str = "",
+    method: str = "get",
+    timeout: int = 15,
+) -> dict:
+    """Fetch a URL and return its content (HTML/text).
+
+    Use this when the user wants info from a website (gold prices, exchange rates, etc.).
+
+    Args:
+        client: Telethon client (unused, kept for compatibility).
+        url: Full URL to fetch (e.g. https://www.tgju.org/).
+        method: HTTP method - 'get' or 'post'.
+        timeout: Timeout in seconds.
+
+    Returns:
+        dict with 'content' (truncated text) or 'error'.
+    """
+    if not url:
+        return {"success": False, "error": "URL is required"}
+    try:
+        import httpx
+        async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as hc:
+            if method == "post":
+                resp = await hc.post(url)
+            else:
+                resp = await hc.get(url)
+            resp.raise_for_status()
+            text = resp.text[:10000]
+            logger.info("fetch_url: %s -> %d bytes", url, len(text))
+            return {"success": True, "content": text, "url": url, "status": resp.status_code}
+    except Exception as e:
+        logger.error("fetch_url error: %s", e)
+        return {"success": False, "error": str(e), "url": url}
+
+
 TOOL_MAP: dict[str, callable] = {
     "send_message": send_message,
     "reply_message": reply_message,
@@ -1126,6 +1169,7 @@ TOOL_MAP: dict[str, callable] = {
     "update_profile": update_profile,
     "export_chat_invite_link": export_chat_invite_link,
     "run_python_code": run_python_code,
+    "fetch_url": fetch_url,
 }
 
 # ─────────────────────────────────────────────
@@ -1606,6 +1650,22 @@ TOOL_SCHEMAS: list[dict] = [
                 "required": ["code"],
             },
         },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "fetch_url",
+            "description": "Fetch a URL and return its HTML/text content. Use for web scraping: gold prices, exchange rates, news, etc.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "url": {"type": "string", "description": "Full URL to fetch"},
+                    "method": {"type": "string", "enum": ["get", "post"], "description": "HTTP method", "default": "get"},
+                    "timeout": {"type": "integer", "description": "Timeout in seconds", "default": 15}
+                },
+                "required": ["url"]
+            }
+        }
     },
 ]
 

@@ -29,7 +29,7 @@
       "content": "اسمش آمیره",
       "confidence": 1.0,
       "created_at": 1783379657.4117017,
-      "updated_at": 1783382675.88412,
+      "updated_at": 1783382731.7031114,
       "source_chat_id": ""
     },
     {
@@ -39,7 +39,7 @@
       "content": "پدر تسیا است",
       "confidence": 1.0,
       "created_at": 1783379657.4121044,
-      "updated_at": 1783382675.8847015,
+      "updated_at": 1783382731.7037241,
       "source_chat_id": ""
     },
     {
@@ -49,7 +49,7 @@
       "content": "کاربر صاحب اکانته",
       "confidence": 1.0,
       "created_at": 1783379657.4132802,
-      "updated_at": 1783382675.8853154,
+      "updated_at": 1783382731.704333,
       "source_chat_id": ""
     },
     {
@@ -59,7 +59,7 @@
       "content": "پدر تسیا (صاحب ربات)",
       "confidence": 1.0,
       "created_at": 1783379657.4138274,
-      "updated_at": 1783382675.8858626,
+      "updated_at": 1783382731.7048774,
       "source_chat_id": ""
     },
     {
@@ -69,7 +69,7 @@
       "content": "اسمش تسیا است",
       "confidence": 1.0,
       "created_at": 1783380521.977312,
-      "updated_at": 1783381494.2081788,
+      "updated_at": 1783383228.26044,
       "source_chat_id": "1548469285"
     },
     {
@@ -81,6 +81,16 @@
       "created_at": 1783380545.2739518,
       "updated_at": 1783380545.2739518,
       "source_chat_id": "1548469285"
+    },
+    {
+      "fact_id": "f_1548469285_1783383228_4277",
+      "user_id": "1548469285",
+      "fact_type": "relationship",
+      "content": "با AI مثل پدر و فرزند رابطه دارد",
+      "confidence": 0.8,
+      "created_at": 1783383228.2613904,
+      "updated_at": 1783383228.2613904,
+      "source_chat_id": "-1001569565280"
     },
     {
       "fact_id": "f_1548469285_1783380521_7815",
@@ -121,7 +131,7 @@
       "content": "آمیر (AmirhosinAR86)",
       "confidence": 1.0,
       "created_at": 1783379657.4167976,
-      "updated_at": 1783382675.8863962,
+      "updated_at": 1783382731.7053735,
       "source_chat_id": ""
     },
     {
@@ -131,7 +141,7 @@
       "content": "پدر تسیا",
       "confidence": 1.0,
       "created_at": 1783379657.4173799,
-      "updated_at": 1783382675.8869817,
+      "updated_at": 1783382731.705927,
       "source_chat_id": ""
     }
   ],
