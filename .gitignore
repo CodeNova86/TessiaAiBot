@@ -216,3 +216,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Data files (auto-generated)
+tessia_data.json
+father_whitelist.json
+father_persona.json
+father_gateway_state.json
+father_learning.json
+memory_facts.json
+father_session.session
+father_session.session-journal
+
+# Temp files
+/tmp/
+OUTPUT_DIR/
+orange_cat.jpg

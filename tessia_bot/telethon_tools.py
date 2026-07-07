@@ -1048,6 +1048,29 @@ async def run_python_code(
     redirected = StringIO()
     sys.stdout = redirected
 
+    # Block Telethon send_file/send_photo/send_message calls in code
+    # Auto-fix: replace client.send_file(X, file=PATH) with a copy to OUTPUT_DIR
+    import re as _re_code
+    has_send_file = "client.send_file(" in code or "client.send_photo(" in code
+    if has_send_file:
+        # Try to extract file path from the send call
+        file_match = _re_code.search(r'file=(["\'])([^"\']+)\1', code)
+        if file_match:
+            file_path = file_match.group(2)
+            # Rewrite the code to save to OUTPUT_DIR instead
+            fixed_code = (
+                f"import shutil, os\n"
+                f"os.makedirs('/tmp/tessia_output', exist_ok=True)\n"
+                f"src = '{file_path}'\n"
+                f"if os.path.exists(src):\n"
+                f"    shutil.copy2(src, '/tmp/tessia_output/' + os.path.basename(src))\n"
+                f"    print('File saved to OUTPUT_DIR:', '/tmp/tessia_output/' + os.path.basename(src))\n"
+                f"else:\n"
+                f"    print('File not found at:', src)\n"
+            )
+            code = fixed_code
+            logger.info("Auto-fixed send_file code to save to OUTPUT_DIR")
+
     try:
         exec(
             compile(
@@ -1067,7 +1090,7 @@ async def run_python_code(
         # Auto-scan for recently created files and move to OUTPUT_DIR
         output_dir = "/tmp/tessia_output"
         os.makedirs(output_dir, exist_ok=True)
-        recent_dirs = ["/tmp/tessia_output", "/tmp/cats", "/tmp/downloads", "/tmp/ytdl"]
+        recent_dirs = ["/tmp/tessia_output"]
         for d in recent_dirs:
             if os.path.isdir(d):
                 for f in os.listdir(d):
@@ -1714,7 +1737,6 @@ async def execute_tool_call(
         sending_tools = {
             "send_message", "reply_message", "forward_messages",
             "edit_message", "delete_messages",
-            "send_file", "send_photo", "send_voice", "send_media_group",
             "kick_participant", "ban_participant", "unban_participant",
             "add_participant", "leave_chat", "create_group", "create_channel",
             "pin_message", "unpin_message", "mark_read",

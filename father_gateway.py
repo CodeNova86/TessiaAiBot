@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 
 from tessia_bot.automation import execute_action_from_tool_call
 from tessia_bot.bot import update_name_mapping
@@ -55,17 +56,15 @@ logger = get_logger("father_gateway")
 MAX_TOOL_CALLS = 5  # prevent infinite tool-calling loops
 
 FATHER_DM_SYSTEM_PROMPT = """
-You are replying from the father's personal Telegram account.
+You are Tessia — a real person, Amir's close friend. You handle his Telegram DMs.
 
-Rules:
-- VERY SHORT replies. 1-3 sentences. Like a real person texting.
-- Natural, warm, casual Persian. No formal language.
-- Emojis rarely, max 1 per message.
-- Never mention AI, policy, or system rules.
-- Never write code or give technical help.
-- Match the relationship vibe from recent chat history.
-- Do NOT call people "بابا", "باباجان", "پسرم", "دخترم", etc unless they already do.
-- If asked for coding/technical work, say now's not a good time.
+### Reply Rules
+- Speak like a real human. No "as an AI", no bot talk.
+- Short answers. 1-2 sentences. Like texting a friend.
+- If someone shares something you can't see, just say what you think naturally.
+- Never say "I can't view" or "I don't have access". Just respond like a human would.
+- Persian with normal slang. One emoji max.
+- If someone's rude, shut them down. You don't owe randoms anything.
 """.strip()
 TOOL_CHOICE_AUTO = "auto"
 TOOL_CHOICE_NONE = "none"
@@ -130,6 +129,7 @@ async def brain_loop(
     telethon_client,
     event=None,
     max_rounds: int = MAX_TOOL_CALLS,
+    tools_schemas: list[dict] | None = None,
 ) -> str:
     """Run the AI brain with tool-calling loop.
 
@@ -141,12 +141,15 @@ async def brain_loop(
         telethon_client: Connected Telethon client.
         event: Telethon event (needed for reply_message).
         max_rounds: Max tool-calling iterations.
+        tools_schemas: Optional subset of TOOL_SCHEMAS to use.
+                      Defaults to full TOOL_SCHEMAS.
 
     Returns:
         The final plain-text response.
     """
     current_messages = list(messages)
     tool_calls_remaining = max_rounds
+    tool_set = tools_schemas if tools_schemas is not None else TOOL_SCHEMAS
 
     # Add a reminder about tools to the last user message
     tool_hint = (
@@ -160,7 +163,7 @@ async def brain_loop(
     while tool_calls_remaining > 0:
         result = await brain_decide_action(
             current_messages,
-            tools=TOOL_SCHEMAS,
+            tools=tool_set,
             tool_choice=TOOL_CHOICE_AUTO,
         )
 
@@ -289,7 +292,7 @@ async def build_recent_chat_messages(
         if getattr(msg, 'sticker', None):
             emoji = msg.sticker.emoji or ""
             parts.append(f"[sticker: {emoji}]")
-        if getattr(msg, 'animation', None):  # GIF
+        if getattr(msg, 'gif', None):  # GIF
             parts.append("[GIF]")
         if getattr(msg, 'photo', None):
             parts.append("[photo]")
@@ -398,8 +401,39 @@ async def handle_new_message(event, client_user):
             return
 
         text = raw_text
-        if not text:
+
+        # Allow sticker/GIF even without text
+        msg = event.message
+        has_sticker = bool(getattr(msg, 'sticker', None))
+        has_gif = bool(getattr(msg, 'gif', None))
+        has_media_msg = has_sticker or has_gif
+        if not text and not has_media_msg:
             return
+
+        # Auto-download GIF to a static image so the AI can "see" it
+        if has_gif:
+            try:
+                import tempfile
+                gif_path = await event.message.download_media(file=tempfile.mkdtemp())
+                if gif_path:
+                    from PIL import Image
+                    img = Image.open(gif_path)
+                    # Grab the first frame
+                    first_frame = img.convert("RGB") if img.mode == "RGBA" else img
+                    output_dir_gif = "/tmp/tessia_output"
+                    os.makedirs(output_dir_gif, exist_ok=True)
+                    out_path = os.path.join(output_dir_gif, "gif_frame.jpg")
+                    first_frame.save(out_path, "JPEG", quality=85)
+                    text = f"[GIF converted to image: {out_path}]"
+                    try: os.remove(gif_path)
+                    except: pass
+                    logger.info("GIF converted to static image: %s", out_path)
+            except Exception as e:
+                logger.warning("GIF conversion failed: %s", e)
+                if not text:
+                    text = "[GIF]"
+
+        # For sticker without text, just describe it
 
         rate_limited_for = is_rate_limited(target_id)
         if rate_limited_for:
@@ -421,13 +455,22 @@ async def handle_new_message(event, client_user):
             target_username or target_id,
             text=text,
             sticker=getattr(msg, 'sticker', None),
-            gif=getattr(msg, 'animation', None),
+            gif=getattr(msg, 'gif', None),
         )
 
         # Build conversation messages
         messages = await build_recent_chat_messages(
             client_user, event, text, persona_note=persona_note,
         )
+
+        # Clean OUTPUT_DIR before running brain for self-commands
+        output_dir = "/tmp/tessia_output"
+        os.makedirs(output_dir, exist_ok=True)
+        for old_f in os.listdir(output_dir):
+            try:
+                os.remove(os.path.join(output_dir, old_f))
+            except Exception:
+                pass
 
         # Run the brain (tool-calling loop)
         reply_text = await brain_loop(messages, client_user, event=event)

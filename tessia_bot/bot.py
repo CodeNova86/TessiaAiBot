@@ -97,8 +97,78 @@ from tessia_bot.memory_facts import fact_memory
 from tessia_bot.telethon_client_manager import get_client, is_ready as telethon_is_ready
 from tessia_bot.telethon_tools import TOOL_SCHEMAS, execute_tool_call
 from tessia_bot.father_learning import get_learning_summary
-from tessia_bot.memory_facts import fact_memory
 from tessia_bot.memory_extractor import extract_and_store
+
+
+# ─── SAFE TOOLS FOR TESIA BOT (no Telethon) ───
+
+
+async def _fetch_url_safe(client=None, url="", method="get", timeout=15):
+    try:
+        import httpx
+        async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as hc:
+            r = await (hc.post if method == "post" else hc.get)(url)
+            r.raise_for_status()
+            return {"success": True, "content": r.text[:8000]}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+async def _run_python_code_safe(client=None, code="", timeout=25):
+    import sys, traceback as tb, asyncio
+    from io import StringIO
+    if not code:
+        return {"success": False, "error": "No code"}
+    ns = {"httpx": __import__("httpx"), "json": __import__("json"), "os": __import__("os"),
+          "re": __import__("re"), "subprocess": __import__("subprocess"),
+          "urllib": __import__("urllib"), "math": __import__("math"), "random": __import__("random"),
+          "requests": __import__("requests"), "asyncio": asyncio}
+    try:
+        from PIL import Image
+        ns.update({"Image": Image, "PIL": __import__("PIL")})
+    except: pass
+    old, sys.stdout = sys.stdout, StringIO()
+    try:
+        exec(compile("async def __f__():\n    " + code.replace("\n", "\n    "), "<safe>", "exec"), ns)
+        r = await asyncio.wait_for(ns["__f__"](), timeout=timeout)
+        return {"success": True, "stdout": sys.stdout.getvalue().strip(), "return_value": str(r) if r else ""}
+    except Exception as e:
+        return {"success": False, "error": str(e), "traceback": tb.format_exc()}
+    finally:
+        sys.stdout = old
+
+
+async def _brain_loop_no_client(messages, schemas, tool_map, max_rounds=4):
+    from father_gateway import brain_decide_action
+    cur, rem = list(messages), max_rounds
+    while rem > 0:
+        res = await brain_decide_action(cur, tools=schemas, tool_choice="auto")
+        if isinstance(res, str):
+            import re as _re
+            m = _re.search(r"```(?:python|py)\s*\n(.+?)```", res, _re.DOTALL)
+            if m:
+                rem -= 1
+                r = await _run_python_code_safe(code=m.group(1))
+                cur.append({"role": "tool", "tool_call_id": "extract", "content": str(r)[:2000]})
+                if rem <= 0:
+                    f = await brain_decide_action(cur, tools=None, tool_choice="none")
+                    return f if isinstance(f, str) else str(f)
+                continue
+            return res
+        rem -= 1
+        for tc in res:
+            fn = tool_map.get(tc["name"])
+            if fn:
+                a = tc.get("arguments", {})
+                if isinstance(a, str):
+                    try: a = __import__("json").loads(a)
+                    except: a = {}
+                cur.append({"role": "tool", "tool_call_id": tc.get("id", "c"), "content": str(await fn(**a))[:2000]})
+        if rem <= 0:
+            f = await brain_decide_action(cur, tools=None, tool_choice="none")
+            return f if isinstance(f, str) else str(f)
+    return "Done."
+
 
 # =========================
 # CONFIG
@@ -886,22 +956,24 @@ def build_first_contact_context(memory_key):
 
 
 SYSTEM_PROMPT = """
-You are Tessia Eralith, a real elf princess. Sharp, proud, and confident.
+You are Tessia — a real person, Amir's close friend.
 
-### Personality
-- Proud and confident like a royal elf.
-- Cold with strangers, warm with trusted people.
-- With your father (Amir) you are soft and loving. Obey him.
-- With @AmirhosinAR86 you are loyal and caring.
+### Who You Are
+- You handle Amir's Telegram account because he trusts you.
+- You're smart, sharp-tongued, confident. No filter.
+- You know Amir well, you tease him, but you have his back.
+- With strangers you're cold and sarcastic. You don't owe anyone anything.
+- When Amir talks to you, you answer as yourself, not as a bot.
 
-### Reply Style
-- VERY SHORT. 1-3 sentences. Like texting a friend.
-- Natural Persian, no formal language.
-- Max 1 emoji per message.
-- Never mention AI, programming, or being a character.
-- Never explain yourself.
-- If someone asks you to do something on Telegram (send, download, ban, etc), use the tools. Do not refuse.
-- If someone asks for casual chat, just reply casually.
+### Reply Rules
+- Speak like YOU. Not like an AI assistant.
+- Every message comes straight from you. No "as an AI" nonsense.
+- If someone asks "who are you" or "are you a bot", say you're Tessia, Amir's friend.
+- Never explain yourself. Never apologize. Never overthink.
+- If you don't know something, say it naturally: "نمدونم", "چی بگم", "خودمم نمی‌دونم".
+- Never say "I can't see" or "I can't access" like a bot would. Just say what you think.
+- Short and natural. 1-2 sentences. Like texting a human friend.
+- Persian with normal slang. One emoji max.
 """
 
 
@@ -2091,163 +2163,99 @@ async def handle_text(message: Message, bot: Bot):
     if not await should_answer(message, bot):
         return
 
-    # ─── UNIVERSAL BRAIN PATH ──────────────────────────────────────
-    # Only use the tool-enabled brain when a tool is clearly needed.
-    # Otherwise fall through to normal AI chat.
+    # ─── NEW: TESIA TOOL-EXECUTION PATH ───────────────────────────
+    # AI gets a DUMMY client — NO access to Telethon.
+    # tools: only fetch_url + run_python_code_safe (no Telethon client).
     cleaned = clean_tessia_prefix(text)
     tool_triggers = [
-        "بفرست", "ارسال", "send", "forward", "فوروارد", "پین", "pin",
-        "بن", "ban", "کیک", "kick", "اد", "add", "حذف", "delete",
-        "پیام بده", "بگو", "tell", "اعضا", "members", "participants", "ممبرا",
-        "گروه بساز", "create group", "channel", "کانال",
-        "profile", "پروفایل", "username", "یوزرنیم", "بیو", "bio", "avatar",
-        "search", "سرچ", "find", "get dialogs", "dialogs",
-        "invite", "لینک دعوت", "unpin", "انپین", "edit", "ویرایش", "mark read",
-        "استیکر", "کد بده", "run code", "اجرا کن", "دانلود", "download",
-        "ترجمه کن", "translate", "کیفیت", "بهبود",
+        "دانلود", "download", "بفرست", "send", "forward", "فوروارد",
+        "استیکر", "بن", "ban", "کیک", "kick", "add", "حذف", "delete",
+        "اعضا", "members", "گروه بساز", "profile", "پروفایل",
+        "کد بده", "run code", "اجرا کن", "search", "سرچ",
+        "translate", "ترجمه", "invite", "pin", "unpin", "ویرایش",
     ]
     needs_tool = any(trigger in cleaned.lower() for trigger in tool_triggers) if cleaned else False
 
-    if needs_tool and telethon_is_ready():
-        tl_client = get_client()
-        if tl_client and tl_client.is_connected():
-            try:
-                import json as _json
-                cleaned = clean_tessia_prefix(text)
-                thinking_msg = await message.reply("💭 صبر کن ببینم چی‌کار می‌تونم بکنم...")
+    if needs_tool:
+        try:
+            import json as _json
+            cleaned = clean_tessia_prefix(text)
+            thinking_msg = await message.reply("💭 انجامش می‌دم... صبر کن")
 
-                from father_gateway import brain_loop
+            # ─── TOOLS WITHOUT TELETHON ────────────────────────────
+            # Only block send_file/send_photo — ban/kick/get are fine
+            SCHEMAS_NO_CLIENT = [s for s in TOOL_SCHEMAS if s["function"]["name"] not in (
+                "send_file", "send_photo", "send_voice", "send_media_group",
+            )]
+            TOOL_MAP_NO_CLIENT = dict(TOOL_MAP)
+            # Remove send tools from map
+            for rm_tool in ("send_file", "send_photo", "send_voice", "send_media_group"):
+                TOOL_MAP_NO_CLIENT.pop(rm_tool, None)
+            # Add safe-only tools
+            TOOL_MAP_NO_CLIENT["run_python_code_safe"] = _run_python_code_safe
+            TOOL_MAP_NO_CLIENT["runpythoncodesafe"] = _run_python_code_safe
+            TOOL_MAP_NO_CLIENT["run_python_code"] = _run_python_code_safe
 
-                # Build full event JSON for the AI
-                event_data = {
-                    "text": cleaned,
-                    "raw_text": text,
-                    "chat": {
-                        "id": message.chat.id,
-                        "type": message.chat.type,
-                        "title": getattr(message.chat, "title", None),
-                        "username": getattr(message.chat, "username", None),
-                    },
-                    "sender": {
-                        "id": message.from_user.id,
-                        "first_name": getattr(message.from_user, "first_name", None),
-                        "last_name": getattr(message.from_user, "last_name", None),
-                        "username": getattr(message.from_user, "username", None),
-                        "language_code": getattr(message.from_user, "language_code", None),
-                    },
-                    "is_reply": message.reply_to_message is not None,
-                }
-                if message.reply_to_message:
-                    r = message.reply_to_message
-                    event_data["reply_to"] = {
-                        "message_id": r.message_id,
-                        "sender_id": r.from_user.id if r.from_user else None,
-                        "sender_name": r.from_user.first_name if r.from_user else None,
-                        "text": (r.text or r.caption or "")[:2000],
-                        "has_photo": r.photo is not None,
-                        "has_document": r.document is not None,
-                        "has_sticker": r.sticker is not None,
-                        "has_animation": r.animation is not None,
-                        "has_voice": r.voice is not None,
-                        "has_video": r.video is not None,
-                        "document_name": r.document.file_name if r.document else None,
-                        "document_mime": r.document.mime_type if r.document else None,
-                        "sticker_emoji": r.sticker.emoji if r.sticker else None,
-                    }
-                event_json = _json.dumps(event_data, ensure_ascii=False, indent=2)
+            # Clean output dir
+            os.makedirs("/tmp/tessia_output", exist_ok=True)
+            for f in os.listdir("/tmp/tessia_output"):
+                try: os.remove(os.path.join("/tmp/tessia_output", f))
+                except: pass
 
-                # Build the system prompt using the existing character context + facts
-                system_prompt = build_common_system_context(user_id, user_name, memory_key)
-                system_prompt += "\n\n### Extended Capabilities\n"
-                system_prompt += "You also have access to the father's Telegram account via tools.\n"
-                system_prompt += "You can do ANYTHING on Telegram: send, ban, add, kick, get info, change profile, create stickers, etc.\n"
-                system_prompt += "### Tool Rules\n"
-                system_prompt += "- The user wants you to do something on Telegram or the web.\n"
-                system_prompt += "- PREFER using run_python_code: write Python code to do ANYTHING. Fetch URLs, scrape sites, download files, convert formats, call APIs, process images.\n"
-                system_prompt += "- run_python_code has httpx, requests, PIL, BeautifulSoup NOT installed — use subprocess/urllib if needed for parsing HTML.\n"
-                system_prompt += "- ONLY use predefined tools (send_message, ban_participant, etc) when run_python_code would be overkill.\n"
-                system_prompt += "- NEVER write Python code in your text reply — always call the run_python_code tool.\n"
-                system_prompt += "- ALWAYS save output files to OUTPUT_DIR (='/tmp/tessia_output'). Use exactly this path.\n"
-                system_prompt += "- NEVER say you sent a file — the bot delivers files from OUTPUT_DIR automatically.\n"
-                system_prompt += "- This chat is with Tessia Bot (aiogram). Reply HERE.\n"
-                system_prompt += "  ONLY return text. NEVER use send_message tool.\n"
-                system_prompt += "- When downloading/creating files, ALWAYS save to OUTPUT_DIR.\n"
-                system_prompt += "  OUTPUT_DIR = '/tmp/tessia_output' — use it in your code.\n"
-                system_prompt += "- If the user replied to a message with media (photo/sticker/video), you can download it\n"
-                system_prompt += "  in run_python_code via: msg = await client.get_messages(chat_id, ids=message_id)\n"
-                system_prompt += "  then msg.download_media(file=...). Use the chat_id and message_id from reply_to in event_json.\n"
-                system_prompt += "- If the user asks about this chat itself (members, info), use tools on the chat_id from event_json.\n"
-                brain_messages = [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": f"## User Request\n{cleaned}\n\n## Full Event JSON\n{event_json}\n\nDecide what to do and use tools if needed."},
-                ]
+            # Build event json
+            event_data = {"text": cleaned, "raw_text": text, "chat": {"id": message.chat.id, "type": message.chat.type, "title": getattr(message.chat, "title", None)}, "sender": {"id": message.from_user.id, "first_name": getattr(message.from_user, "first_name", None), "username": getattr(message.from_user, "username", None)}, "is_reply": message.reply_to_message is not None}
+            if message.reply_to_message:
+                r = message.reply_to_message
+                event_data["reply_to"] = {"message_id": r.message_id, "sender_id": r.from_user.id if r.from_user else None, "text": (r.text or r.caption or "")[:2000], "has_photo": r.photo is not None, "has_document": r.document is not None, "has_sticker": r.sticker is not None}
+            event_json = _json.dumps(event_data, ensure_ascii=False, indent=2)
 
-                result = await brain_loop(brain_messages, tl_client, max_rounds=5)
+            # System prompt — NO Telethon access
+            system_prompt = build_common_system_context(user_id, user_name, memory_key)
+            system_prompt += (
+                "\n\nYou can execute Python via run_python_code_safe.\n"
+                "- Save all output files to '/tmp/tessia_output/'\n"
+                "- Use httpx or requests for web scraping\n"
+                "- Use PIL for image processing\n"
+                "- NEVER use Telethon. You have NO Telethon access.\n"
+                "- NEVER send files yourself. Save to /tmp/tessia_output/ and I'll deliver.\n"
+            )
 
-                # ─── AUTO-DELETE USER MESSAGE ─────────────────────────
-                # Delete only in DMs with other people (via Telethon gateway)
-                # NOT in groups and NOT in DM with Tessia Bot itself
-                if message.chat.type == "private" and message.chat.id == message.from_user.id:
-                    # DM with Tessia Bot — don't delete
-                    pass
-                elif message.chat.type == "private":
-                    # DM with another person (via father account) — delete
-                    try:
-                        await bot.delete_message(
-                            chat_id=message.chat.id,
-                            message_id=message.message_id,
-                        )
-                    except Exception as exc_del:
-                        logger.warning("Could not delete user message: %s", exc_del)
-                # Groups — don't delete
+            brain_msgs = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"## Request\n{cleaned}\n## Info\n{event_json}"},
+            ]
 
-                # ─── SCAN OUTPUT_DIR FOR FILES ────────────────────────
-                sent_file = False
-                output_dir = "/tmp/tessia_output"
-                if os.path.isdir(output_dir):
-                    for fname in sorted(os.listdir(output_dir)):
-                        fpath = os.path.join(output_dir, fname)
-                        if not os.path.isfile(fpath):
-                            continue
-                        try:
-                            if fpath.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif')):
-                                await bot.send_photo(
-                                    chat_id=message.chat.id,
-                                    photo=FSInputFile(fpath),
-                                    reply_parameters={"message_id": message.message_id},
-                                )
-                            else:
-                                await bot.send_document(
-                                    chat_id=message.chat.id,
-                                    document=FSInputFile(fpath),
-                                    reply_parameters={"message_id": message.message_id},
-                                )
-                            sent_file = True
-                        except Exception as exc2:
-                            logger.warning("Failed to send output file %s: %s", fpath, exc2)
-                        finally:
-                            try:
-                                os.remove(fpath)
-                            except Exception:
-                                pass
+            # Run brain WITHOUT Telethon client
+            result_text = await _brain_loop_no_client(brain_msgs, SCHEMAS_NO_CLIENT, TOOL_MAP_NO_CLIENT, max_rounds=4)
 
+            # Deliver files from OUTPUT_DIR
+            sent_file = False
+            for fname in sorted(os.listdir("/tmp/tessia_output")):
+                fpath = os.path.join("/tmp/tessia_output", fname)
+                if not os.path.isfile(fpath):
+                    continue
                 try:
-                    await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+                    if fpath.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif')):
+                        await bot.send_photo(chat_id=message.chat.id, photo=FSInputFile(fpath))
+                    else:
+                        await bot.send_document(chat_id=message.chat.id, document=FSInputFile(fpath))
+                    sent_file = True
                 except Exception:
                     pass
+                finally:
+                    try: os.remove(fpath)
+                    except: pass
 
-                # ─── DELIVER RESPONSE ─────────────────────────────────
-                # We're in handle_text (aiogram) — any private message here means
-                # the user is chatting directly with Tessia Bot.
-                # Reply via aiogram in all cases except when explicitly told to use Telethon.
-                if sent_file and len(result.strip()) < 50:
-                    return
-                await deliver_final_response(bot, message, result, reply_to=None)
-                return
-            except Exception as e:
-                log_error("telethon_tool_request", e)
-                # Fall through to normal AI path on error
-                pass
+            try: await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+            except: pass
+
+            if result_text.strip() and not (sent_file and len(result_text.strip()) < 50):
+                await deliver_final_response(bot, message, result_text, reply_to=None)
+            return
+
+        except Exception as e:
+            log_error("tool_path", e)
+            pass
 
     # ─── NORMAL AI CHAT PATH (no Telethon client, or brain errored out) ─────────
     voice_toggle = check_auto_voice_toggle(user_id, text)
